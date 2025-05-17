@@ -26,9 +26,14 @@ void MyGame::Update() {
 
 void MyGame::Draw() {
 	//描画開始
-	DirectXCommon::GetInstance()->PreDraw();
+	DirectXCommon::GetInstance()->RenderTexturePreDraw();// 対 renderTexture
 
 	gameScene->Draw();
+
+	//DirectXCommon::GetInstance()->PostDraw();
+
+	//描画開始
+	DirectXCommon::GetInstance()->PreDraw();// 対 swapchain
 
 #ifdef  USE_IMGUI
 	//ImGui描画処理

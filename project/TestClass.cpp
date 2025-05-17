@@ -17,7 +17,7 @@ void TestClass::Init() {
 	object_ = new Object3d();
 	object_->Initialize();
 	object_->SetModelFile("grass01");
-	
+	worldTransform_.scale_ = { 0.5f,0.5f,0.5f };
 }
 
 void TestClass::Update() {

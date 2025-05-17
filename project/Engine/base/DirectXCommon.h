@@ -14,6 +14,9 @@
 #include "externals/DirectXTex/DirectXTex.h"
 #include <chrono>
 
+
+#include "Vector4.h"
+
 class DirectXCommon {
 public:
 	static DirectXCommon* GetInstance();
@@ -29,15 +32,6 @@ public:
 		D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDesciptors, bool shaderVisible);
 
 	void RTV();
-
-	D3D12_CPU_DESCRIPTOR_HANDLE GetSRVCPUDescriptorHandle(uint32_t index);
-	D3D12_GPU_DESCRIPTOR_HANDLE GetSRVGPUDescriptorHandle(uint32_t index);
-
-	D3D12_CPU_DESCRIPTOR_HANDLE GetRTVCPUDescriptorHandle(uint32_t index);
-	D3D12_GPU_DESCRIPTOR_HANDLE GetRTVGPUDescriptorHandle(uint32_t index);
-
-	D3D12_CPU_DESCRIPTOR_HANDLE GetDSVCPUDescriptorHandle(uint32_t index);
-	D3D12_GPU_DESCRIPTOR_HANDLE GetDSVGPUDescriptorHandle(uint32_t index);
 
 	//void SRV();
 	void DSV();//深度ステンシルビュー
@@ -70,6 +64,13 @@ public:
 	ID3D12DescriptorHeap* GetSrvDescriptorHeap() { return srvDescriptorHeap.Get(); }
 	//DXGI_SWAP_CHAIN_DESC1 GetSwapChainDesc() { return swapChainDesc; };
 	size_t GetSwapChainResourceNum() { return swapChainDesc.BufferCount; }
+
+	//device,width,heightは省略
+	Microsoft::WRL::ComPtr<ID3D12Resource> CreateRenderTextureResource(DXGI_FORMAT format, const Vector4& clearColor);
+	
+	ID3D12Resource* GetRenderTexture() { return renderTextureResource.Get(); }
+
+	void RenderTexturePreDraw();
 
 	void Finalize();
 
@@ -132,10 +133,6 @@ private:
 
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles[MaxResource];
 
-	D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(Microsoft::WRL::ComPtr <ID3D12DescriptorHeap> descriptorHeap, uint32_t descriptorSize, uint32_t index);
-	D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(Microsoft::WRL::ComPtr < ID3D12DescriptorHeap> descriptorHeap, uint32_t descriptorSize, uint32_t index);
-
-
 	//ビューポート
 	D3D12_VIEWPORT viewport;
 
@@ -176,4 +173,8 @@ private:
 
 
 	static uint32_t kSRVIndexTop;
+
+	Microsoft::WRL::ComPtr<ID3D12Resource> renderTextureResource;
+	
+	D3D12_CLEAR_VALUE clearValue;
 };

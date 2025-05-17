@@ -271,45 +271,6 @@ Microsoft::WRL::ComPtr <ID3D12DescriptorHeap> DirectXCommon::CreateDescriptorHea
 	return descriptorHeap;
 }
 
-
-
-D3D12_CPU_DESCRIPTOR_HANDLE  DirectXCommon::GetCPUDescriptorHandle(Microsoft::WRL::ComPtr <ID3D12DescriptorHeap> descriptorHeap, uint32_t descriptorSize, uint32_t index) {
-	D3D12_CPU_DESCRIPTOR_HANDLE handleCPU = descriptorHeap->GetCPUDescriptorHandleForHeapStart();
-	handleCPU.ptr += (descriptorSize * index);
-	return handleCPU;
-}
-
-D3D12_GPU_DESCRIPTOR_HANDLE  DirectXCommon::GetGPUDescriptorHandle(Microsoft::WRL::ComPtr < ID3D12DescriptorHeap> descriptorHeap, uint32_t descriptorSize, uint32_t index) {
-	D3D12_GPU_DESCRIPTOR_HANDLE handleGPU = descriptorHeap->GetGPUDescriptorHandleForHeapStart();
-	handleGPU.ptr += (descriptorSize * index);
-	return handleGPU;
-}
-
-
-//SRVHandle
-D3D12_CPU_DESCRIPTOR_HANDLE  DirectXCommon::GetSRVCPUDescriptorHandle(uint32_t index) {
-	return GetCPUDescriptorHandle(srvDescriptorHeap, descriptorSizeSRV, index);
-}
-D3D12_GPU_DESCRIPTOR_HANDLE  DirectXCommon::GetSRVGPUDescriptorHandle(uint32_t index) {
-	return GetGPUDescriptorHandle(srvDescriptorHeap, descriptorSizeSRV, index);
-}
-
-//RTVHandle
-D3D12_CPU_DESCRIPTOR_HANDLE  DirectXCommon::GetRTVCPUDescriptorHandle(uint32_t index) {
-	return GetCPUDescriptorHandle(rtvDescriptorHeap, descriptorSizeRTV, index);
-}
-D3D12_GPU_DESCRIPTOR_HANDLE  DirectXCommon::GetRTVGPUDescriptorHandle(uint32_t index) {
-	return GetGPUDescriptorHandle(rtvDescriptorHeap, descriptorSizeRTV, index);
-}
-
-//DSVHandle
-D3D12_CPU_DESCRIPTOR_HANDLE  DirectXCommon::GetDSVCPUDescriptorHandle(uint32_t index) {
-	return GetCPUDescriptorHandle(dsvDescriptorHeap, descriptorSizeDSV, index);
-}
-D3D12_GPU_DESCRIPTOR_HANDLE  DirectXCommon::GetDSVGPUDescriptorHandle(uint32_t index) {
-	return GetGPUDescriptorHandle(dsvDescriptorHeap, descriptorSizeDSV, index);
-}
-
 void DirectXCommon::RTV() {
 	//RTV
 	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
@@ -317,13 +278,18 @@ void DirectXCommon::RTV() {
 
 	rtvStartHandle = rtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 
+	const Vector4 kRenderTargetClearValue{ 1.0f,0.0f,0.0f,1.0f };//赤色
+	renderTextureResource =  CreateRenderTextureResource(DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, kRenderTargetClearValue);
+
 	for (uint32_t i = 0; i < MaxResource; ++i) {
 		rtvHandles[i] = rtvStartHandle;
 		if (i > 0) {
 			rtvHandles[i].ptr = rtvHandles[i - 1].ptr + device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-		}
-		device->CreateRenderTargetView(swapChainResources[i].Get(), &rtvDesc, rtvHandles[i]);
-	}
+		}		
+		device->CreateRenderTargetView(swapChainResources[i].Get(), &rtvDesc, rtvHandles[i]);	
+		if (i < 0) 
+		device->CreateRenderTargetView(renderTextureResource.Get(), &rtvDesc, rtvHandles[i]);
+	}	
 }
 
 void DirectXCommon::DSV() {
@@ -529,18 +495,18 @@ void DirectXCommon::PreDraw() {
 	UINT backBufferIndex = swapChain->GetCurrentBackBufferIndex();
 
 
-	//今回のバリアはTransition
-	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	//Noneにしておく
-	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-	//バリアを貼る対象のリソース。現在のバッファに対して行う
-	barrier.Transition.pResource = swapChainResources[backBufferIndex].Get();//こいつ
-	//前の(現在の)ResourceState
-	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
-	//後のResourceState
-	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	//TransitionBarrierを張る
-	commandList->ResourceBarrier(1, &barrier);
+	////今回のバリアはTransition
+	//barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	////Noneにしておく
+	//barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	////バリアを貼る対象のリソース。現在のバッファに対して行う
+	//barrier.Transition.pResource = swapChainResources[backBufferIndex].Get();//こいつ
+	////前の(現在の)ResourceState
+	//barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
+	////後のResourceState
+	//barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	////TransitionBarrierを張る
+	//commandList->ResourceBarrier(1, &barrier);
 
 
 	// 描画先のRTVの設定をする
@@ -552,19 +518,21 @@ void DirectXCommon::PreDraw() {
 
 	//描画用のDescriptorHeap
 	Microsoft::WRL::ComPtr < ID3D12DescriptorHeap> descriptorHeaps[] = { srvDescriptorHeap };
-	commandList->SetDescriptorHeaps(1, descriptorHeaps->GetAddressOf());
+	commandList->SetDescriptorHeaps(1, descriptorHeaps->GetAddressOf());	
 
-	//DSV
-	dsvHandle = dsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
-	commandList->OMSetRenderTargets(1, &rtvHandles[backBufferIndex], false, &dsvHandle);
-	commandList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+	//--なくなる--
+	////DSV
+	//dsvHandle = dsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+	//commandList->OMSetRenderTargets(1, &rtvHandles[backBufferIndex], false, &dsvHandle);
+	//commandList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+	//-----------
 
 
 
 	commandList->RSSetViewports(1, &viewport);
 	commandList->RSSetScissorRects(1, &scissorRect);
 
-	SrvManager::GetInstance()->PreDraw();
+	//SrvManager::GetInstance()->PreDraw();
 }
 
 //更新後
@@ -638,6 +606,92 @@ void DirectXCommon::UpdateFixFPS() {
 		}
 	}
 	reference_ = std::chrono::steady_clock::now();
+}
+
+Microsoft::WRL::ComPtr<ID3D12Resource> DirectXCommon::CreateRenderTextureResource(DXGI_FORMAT format, const Vector4& clearColor) {
+
+	D3D12_RESOURCE_DESC resourceDesc{};
+	resourceDesc.Width = WinApp::kClientWidth;
+	resourceDesc.Height = WinApp::kClientHeight;
+	resourceDesc.MipLevels = 1;
+	resourceDesc.DepthOrArraySize = 1;
+	resourceDesc.Format = format;
+	resourceDesc.SampleDesc.Count = 1;
+	resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;//二次元
+
+	resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;//RenderTargetとして利用可能
+
+	D3D12_HEAP_PROPERTIES heapProperties{};
+	heapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;
+	
+	//D3D12_CLEAR_VALUE clearValue;
+	clearValue.Format = format;
+	clearValue.Color[0] = clearColor.x;
+	clearValue.Color[1] = clearColor.y;
+	clearValue.Color[2] = clearColor.z;
+	clearValue.Color[3] = clearColor.s;
+
+	Microsoft::WRL::ComPtr<ID3D12Resource> resource;
+
+	//resourceの生成
+	device->CreateCommittedResource(
+		&heapProperties,
+		D3D12_HEAP_FLAG_NONE,
+		&resourceDesc,
+		D3D12_RESOURCE_STATE_RENDER_TARGET,
+		&clearValue,
+		IID_PPV_ARGS(&resource));
+
+	return resource;
+}
+
+void DirectXCommon::RenderTexturePreDraw() {
+
+	//　これから書き込みバックバッファのインデックスを取得
+	UINT backBufferIndex = swapChain->GetCurrentBackBufferIndex();
+
+	//今回のバリアはTransition
+	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	//Noneにしておく
+	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	//バリアを貼る対象のリソース。現在のバッファに対して行う
+	barrier.Transition.pResource = swapChainResources[backBufferIndex].Get();//こいつ
+	//前の(現在の)ResourceState
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
+	//後のResourceState
+	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	//TransitionBarrierを張る
+	commandList->ResourceBarrier(1, &barrier);
+
+
+	// 描画先のRTVの設定をする
+	commandList->OMSetRenderTargets(1, &rtvHandles[backBufferIndex], false, nullptr);
+	//指定した色で画面をクリアする　
+	float clearColor[] = { 0.1f,0.25f,0.5f,1.0f };
+
+	clearColor[0] = clearValue.Color[0];
+	clearColor[1] = clearValue.Color[1];
+	clearColor[2] = clearValue.Color[2];
+	clearColor[3] = clearValue.Color[3];
+
+	//コマンド蓄積
+	commandList->ClearRenderTargetView(rtvHandles[backBufferIndex],clearColor, 0, nullptr);
+
+	//描画用のDescriptorHeap
+	Microsoft::WRL::ComPtr < ID3D12DescriptorHeap> descriptorHeaps[] = { srvDescriptorHeap };
+	commandList->SetDescriptorHeaps(1, descriptorHeaps->GetAddressOf());
+
+	//DSV
+	dsvHandle = dsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+	commandList->OMSetRenderTargets(1, &rtvHandles[backBufferIndex], false, &dsvHandle);
+	commandList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+
+
+
+	commandList->RSSetViewports(1, &viewport);
+	commandList->RSSetScissorRects(1, &scissorRect);
+
+	SrvManager::GetInstance()->PreDraw();
 }
 
 void DirectXCommon::Finalize() {
