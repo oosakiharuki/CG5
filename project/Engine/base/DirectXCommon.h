@@ -71,6 +71,7 @@ public:
 	ID3D12Resource* GetRenderTexture() { return renderTextureResource.Get(); }
 
 	void RenderTexturePreDraw();
+	void RenderTexturePostDraw();
 
 	void Finalize();
 
@@ -106,9 +107,6 @@ private:
 
 
 	//深度バッファ
-	D3D12_RESOURCE_DESC resourceDesc{};
-	D3D12_HEAP_PROPERTIES heapProperties{};
-	D3D12_CLEAR_VALUE depthClearValue{};
 	Microsoft::WRL::ComPtr<ID3D12Resource> resource = nullptr;
 
 
@@ -132,6 +130,7 @@ private:
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvStartHandle;
 
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles[MaxResource];
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandlesRT;
 
 	//ビューポート
 	D3D12_VIEWPORT viewport;
@@ -174,6 +173,7 @@ private:
 
 	static uint32_t kSRVIndexTop;
 
+	//書き込み可能なテクスチャ レンダーテクスチャ
 	Microsoft::WRL::ComPtr<ID3D12Resource> renderTextureResource;
 	
 	D3D12_CLEAR_VALUE clearValue;

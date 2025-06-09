@@ -30,7 +30,7 @@ void MyGame::Draw() {
 
 	gameScene->Draw();
 
-	//DirectXCommon::GetInstance()->PostDraw();
+	DirectXCommon::GetInstance()->RenderTexturePostDraw();
 
 	//描画開始
 	DirectXCommon::GetInstance()->PreDraw();// 対 swapchain
