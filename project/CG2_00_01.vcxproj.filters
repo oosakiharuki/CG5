@@ -262,7 +262,7 @@
     <None Include="resource\shaders\Sprite.hlsli">
       <Filter>リソース ファイル</Filter>
     </None>
-    <None Include="resource\shaders\CopyImage.hlsli">
+    <None Include="resource\shaders\Fullscreen.hlsli">
       <Filter>リソース ファイル</Filter>
     </None>
   </ItemGroup>
@@ -288,7 +288,10 @@
     <FxCompile Include="resource\shaders\CopyImage.PS.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
-    <FxCompile Include="resource\shaders\CopyImage.VS.hlsl">
+    <FxCompile Include="resource\shaders\Fullscreen.VS.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="resource\shaders\Grayscale.PS.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
   </ItemGroup>
