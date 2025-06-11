@@ -25,7 +25,7 @@ private:
 
 	//std::vector<Sprite*> sprites;
 	//std::vector<Object3d*> objects;
-	//Sprite* spriteUI;
+	Sprite* spriteUI;
 
 	//Particle* particle = nullptr;
 	//Particle* particle2 = nullptr;

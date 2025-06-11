@@ -11,6 +11,8 @@
 #include "SrvManager.h"
 #include "ImGuiManager.h"
 
+#include "PostEffect.h"
+
 using namespace Microsoft::WRL;
 using namespace Logger;
 using namespace StringUtility;
@@ -510,7 +512,7 @@ void DirectXCommon::PreDraw() {
 	//後のResourceState
 	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	//TransitionBarrierを張る
-	commandList->ResourceBarrier(1, &barrier);
+	commandList->ResourceBarrier(1, &barrier);	
 	// 描画先のRTVの設定をする
 	commandList->OMSetRenderTargets(1, &rtvHandles[backBufferIndex], false, nullptr);
 	//指定した色で画面をクリアする　
@@ -532,6 +534,13 @@ void DirectXCommon::PreDraw() {
 
 	commandList->RSSetViewports(1, &viewport);
 	commandList->RSSetScissorRects(1, &scissorRect);
+
+	///PostEffect
+
+	PostEffect::GetInstance()->Command();
+	
+	///ここまで
+
 }
 
 //更新後
@@ -539,7 +548,7 @@ void DirectXCommon::PostDraw() {
 
 	//　これから書き込みバックバッファのインデックスを取得
 	UINT backBufferIndex = swapChain->GetCurrentBackBufferIndex();
-
+	
 	//画面に描く処理はすべて終わり、画面に映すので、状況をそうい
 	//今回はResourceTargetからPresentにする
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;

@@ -42,6 +42,8 @@ void Framework::Initialize() {
 	particleCommon->Initialize(dxCommon);
 	ParticleManager::GetInstance()->Initialize(dxCommon, srvManager);
 
+	postEffect = PostEffect::GetInstance();
+	postEffect->Initialize(dxCommon);
 }
 
 void Framework::Update() {
@@ -80,6 +82,8 @@ void Framework::Finalize() {
 	delete modelCommon;
 	
 	particleCommon->Finalize();
+
+	postEffect->Finalize();
 }
 
 

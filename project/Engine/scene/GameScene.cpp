@@ -32,6 +32,10 @@ void GameScene::Initialize() {
 
  	testClass = new TestClass();
  	testClass->Init();
+
+	spriteUI = new Sprite();
+	spriteUI->Initialize("uvChecker.png");
+
 }
 
 void GameScene::Update() {
@@ -51,6 +55,8 @@ void GameScene::Update() {
 	testClass->Update();
 
 	camera->Update();
+
+	spriteUI->Update();
 
 #ifdef  USE_IMGUI
 
@@ -95,9 +101,12 @@ void GameScene::Draw() {
 	//スプライト描画処理(UI用)
 	SpriteCommon::GetInstance()->Command();
 
+	spriteUI->Draw();
 }
 void GameScene::Finalize() {
 	
 	delete camera;
 	delete testClass;
+
+	delete spriteUI;
 }
