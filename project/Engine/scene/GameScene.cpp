@@ -55,7 +55,8 @@ void GameScene::Update() {
 	testClass->Update();
 
 	camera->Update();
-
+	
+	spriteUI->SetSize(Vector2(128, 128));
 	spriteUI->Update();
 
 #ifdef  USE_IMGUI
