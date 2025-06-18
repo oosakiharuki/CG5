@@ -300,5 +300,8 @@
     <FxCompile Include="resource\shaders\BoxFilter.PS.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
+    <FxCompile Include="resource\shaders\GaussianFilter.PS.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
