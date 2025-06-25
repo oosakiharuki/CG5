@@ -8,9 +8,19 @@ struct PixelShaderOutput
     float32_t4 color : SV_TARGET0;
 };
 
+float gauss(float x, float y, float sigma)
+{
+    static const float32_t PI = 3.14159265f;
+                
+    float exponent = -(x * x + y * y) * rcp(2.0f * sigma * sigma);
+    float denominator = 2.0f * PI * sigma * sigma;
+            
+    return exp(exponent) * rcp(denominator);
+}
+
 PixelShaderOutput main(VartexShaderOutput input)
 {
-    static const int32_t box = 9;
+    static const int32_t box = 13;
     float32_t2 kIndex3x3[box][box];
     
     float k = (box - 1) / 2;
@@ -37,9 +47,6 @@ PixelShaderOutput main(VartexShaderOutput input)
     output.color.rgb = float32_t3(0.0f, 0.0f, 0.0f);
     output.color.a = 1.0f;
 
-    static const float32_t PI = 3.14159265f;
-    
-    float sigma = 2.0f;//a
     float32_t weight = 0.0f;
     float32_t Kernel3x3[box][box];
     
@@ -48,17 +55,11 @@ PixelShaderOutput main(VartexShaderOutput input)
         for (int32_t y = 0; y < box; ++y)
         {
             
-            float IndexX = kIndex3x3[x][y].x;
-            float IndexY = kIndex3x3[x][y].y;
-            
-            float exponent = -(IndexX * IndexX + IndexY * IndexY) * rcp(2.0f * sigma * sigma);
-            float denominator = 2.0f * PI * sigma * sigma;
-            
-            Kernel3x3[x][y] = exp(exponent) * rcp(denominator);
+            Kernel3x3[x][y] = gauss(kIndex3x3[x][y].x, kIndex3x3[x][y].y, 2.0f);
             weight += Kernel3x3[x][y];
                   
             //kKernel3x3[x][y] = 1.0f / pow(box, 2);
-            
+
             float32_t2 texcoord = input.texcoord + kIndex3x3[x][y] * uvStepSize;
             float32_t3 fetchColor = gTexture.Sample(gSampler, texcoord).rgb;
             output.color.rgb += fetchColor * Kernel3x3[x][y];
