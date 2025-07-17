@@ -13,6 +13,8 @@
 
 #include "PostEffect.h"
 
+//#define UNREFERENCED_PARMETER(hr)
+
 using namespace Microsoft::WRL;
 using namespace Logger;
 using namespace StringUtility;
@@ -239,7 +241,7 @@ void DirectXCommon::ZBuffer() {
 		&resourceDesc,
 		D3D12_RESOURCE_STATE_DEPTH_WRITE,
 		&depthClearValue,
-		IID_PPV_ARGS(&resource));
+		IID_PPV_ARGS(&depthStencilResource));
 	assert(SUCCEEDED(hr));
 
 }
@@ -296,7 +298,7 @@ void DirectXCommon::RTV() {
 	rtvHandlesRT = rtvStartHandle;
 	rtvHandlesRT.ptr = rtvHandles[1].ptr + device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
-	device->CreateRenderTargetView(renderTextureResource.Get(), &rtvDesc, rtvHandlesRT);	
+	device->CreateRenderTargetView(renderTextureResource.Get(), &rtvDesc, rtvHandlesRT);
 }
 
 void DirectXCommon::DSV() {
@@ -309,7 +311,7 @@ void DirectXCommon::DSV() {
 	//Microsoft::WRL::ComPtr<ID3D12Resource> depthStencilResource = CreateDepthStencilTextureResource(device, WinApp::kClientWidth, WinApp::kClientHeight);
 
 	//DSVHeapの先頭
-	device->CreateDepthStencilView(*&resource, &dscDesc, dsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
+	device->CreateDepthStencilView(*&depthStencilResource, &dscDesc, dsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
 
 }
 
@@ -501,10 +503,6 @@ void DirectXCommon::PreDraw() {
 	//　これから書き込みバックバッファのインデックスを取得
 	UINT backBufferIndex = swapChain->GetCurrentBackBufferIndex();
 
-	//今回のバリアはTransition
-	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	//Noneにしておく
-	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 	//バリアを貼る対象のリソース。現在のバッファに対して行う
 	barrier.Transition.pResource = swapChainResources[backBufferIndex].Get();//こいつ
 	//前の(現在の)ResourceState
@@ -523,22 +521,33 @@ void DirectXCommon::PreDraw() {
 	//描画用のDescriptorHeap
 	SrvManager::GetInstance()->PreDraw();
 
-	//--なくなる--
-	////DSV
-	//dsvHandle = dsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
-	//commandList->OMSetRenderTargets(1, &rtvHandles[backBufferIndex], false, &dsvHandle);
-	//commandList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
-	//-----------
-
-
 
 	commandList->RSSetViewports(1, &viewport);
 	commandList->RSSetScissorRects(1, &scissorRect);
 
 	///PostEffect
 
+	//バリアを貼る対象のリソース。現在のバッファに対して行う
+	barrier.Transition.pResource = depthStencilResource.Get();//こいつ
+	//前の(現在の)ResourceState
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_DEPTH_WRITE;
+	//後のResourceState
+	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	//TransitionBarrierを張る
+	commandList->ResourceBarrier(1, &barrier);
+
 	PostEffect::GetInstance()->Command();
+
+	//バリアを貼る対象のリソース。現在のバッファに対して行う
+	barrier.Transition.pResource = depthStencilResource.Get();//こいつ
+	//前の(現在の)ResourceState
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	//後のResourceState
+	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_DEPTH_WRITE;
+	//TransitionBarrierを張る
+	commandList->ResourceBarrier(1, &barrier);
 	
+
 	///ここまで
 
 }
@@ -549,6 +558,8 @@ void DirectXCommon::PostDraw() {
 	//　これから書き込みバックバッファのインデックスを取得
 	UINT backBufferIndex = swapChain->GetCurrentBackBufferIndex();
 	
+	//バリアを貼る対象のリソース。現在のバッファに対して行う
+	barrier.Transition.pResource = swapChainResources[backBufferIndex].Get();//こいつ
 	//画面に描く処理はすべて終わり、画面に映すので、状況をそうい
 	//今回はResourceTargetからPresentにする
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
@@ -655,9 +666,6 @@ Microsoft::WRL::ComPtr<ID3D12Resource> DirectXCommon::CreateRenderTextureResourc
 
 void DirectXCommon::RenderTexturePreDraw() {
 
-	//　これから書き込みバックバッファのインデックスを取得
-	UINT backBufferIndex = swapChain->GetCurrentBackBufferIndex();
-
 	//今回のバリアはTransition
 	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	//Noneにしておく
@@ -698,10 +706,6 @@ void DirectXCommon::RenderTexturePreDraw() {
 }
 
 void DirectXCommon::RenderTexturePostDraw() {
-	//今回のバリアはTransition
-	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	//Noneにしておく
-	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 	//バリアを貼る対象のリソース。現在のバッファに対して行う
 	barrier.Transition.pResource = renderTextureResource.Get();//こいつ
 	//前の(現在の)ResourceState

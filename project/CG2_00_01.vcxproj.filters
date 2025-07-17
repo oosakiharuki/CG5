@@ -28,14 +28,14 @@
     <Filter Include="ソース ファイル\Engine\math">
       <UniqueIdentifier>{5080c25b-1a97-4ac3-bbc4-937a3146f8b7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Engine\2d">
-      <UniqueIdentifier>{60c51db4-57e8-4c52-a251-89af31add87e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Engine\audio">
       <UniqueIdentifier>{7e494eda-49a5-4e26-aa68-09331557a0e6}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\Engine\scene">
       <UniqueIdentifier>{73845869-d02a-4959-b656-d88b792ecf40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Engine\2d">
+      <UniqueIdentifier>{60c51db4-57e8-4c52-a251-89af31add87e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -301,6 +301,12 @@
       <Filter>リソース ファイル</Filter>
     </FxCompile>
     <FxCompile Include="resource\shaders\GaussianFilter.PS.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="resource\shaders\LuminanceBasedOutline.PS.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="resource\shaders\DepthBasedOutline.PS.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
   </ItemGroup>

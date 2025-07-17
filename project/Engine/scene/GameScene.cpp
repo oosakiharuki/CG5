@@ -16,13 +16,14 @@ void GameScene::Initialize() {
 	//ModelManager::GetInstance()->LoadModel("maru.obj");
 	//ModelManager::GetInstance()->LoadModel("teapot.obj");
 	ModelManager::GetInstance()->LoadModel("grass01");
+	ModelManager::GetInstance()->LoadModel("sphere");
 
 
 	camera = new Camera();
 	//Vector3 cameraRotate = { 1.4f,0.0f,0.0f };
 	//Vector3 cameraTranslate = { 0.0f,30.0f,-8.0f };
-	cameraRotate = { 1.2f,0.0f,0.0f };
-	cameraTranslate = { 0.0f,20.0f,-8.0f };
+	cameraRotate = { 0.3f,0.0f,0.0f };
+	cameraTranslate = { 0.0f,5.0f,-16.0f };
 
 	camera->SetRotate(cameraRotate);
 	camera->SetTranslate(cameraTranslate);
@@ -35,6 +36,9 @@ void GameScene::Initialize() {
 
 	spriteUI = new Sprite();
 	spriteUI->Initialize("uvChecker.png");
+
+	spriteUI2 = new Sprite();
+	spriteUI2->Initialize("uvChecker.png");
 
 }
 
@@ -59,6 +63,8 @@ void GameScene::Update() {
 	spriteUI->SetSize(Vector2(256, 256));
 	spriteUI->Update();
 
+	spriteUI2->Update();
+
 #ifdef  USE_IMGUI
 
 	//ここにテキストを入れられる
@@ -79,6 +85,17 @@ void GameScene::Update() {
 	camera->SetTranslate(cameraTranslate);
 
 	ImGui::End();
+
+#ifdef _DEBUG
+
+	ImGui::Begin("TestTexture");
+
+	ImGui::InputFloat2("VertexModel", &position.x);
+	ImGui::SliderFloat2("SliderVertexModel", &position.x, 0.0f, 600.0f);
+
+	ImGui::End();
+	spriteUI->SetPosition(position);
+#endif // _DEBUG
 #endif //  USE_IMGUI
 }
 
@@ -86,6 +103,7 @@ void GameScene::Draw() {
 
 	//スプライト描画処理(背景用)
 	SpriteCommon::GetInstance()->Command();
+	//spriteUI2->Draw();
 
 
 	//モデル描画処理
@@ -110,4 +128,5 @@ void GameScene::Finalize() {
 	delete testClass;
 
 	delete spriteUI;
+	delete spriteUI2;
 }

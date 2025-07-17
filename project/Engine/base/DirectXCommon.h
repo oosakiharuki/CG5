@@ -69,6 +69,7 @@ public:
 	Microsoft::WRL::ComPtr<ID3D12Resource> CreateRenderTextureResource(DXGI_FORMAT format, const Vector4& clearColor);
 	
 	ID3D12Resource* GetRenderTexture() { return renderTextureResource.Get(); }
+	ID3D12Resource* GetOutlineResource() { return depthStencilResource.Get(); }
 
 	void RenderTexturePreDraw();
 	void RenderTexturePostDraw();
@@ -107,7 +108,7 @@ private:
 
 
 	//深度バッファ
-	Microsoft::WRL::ComPtr<ID3D12Resource> resource = nullptr;
+	Microsoft::WRL::ComPtr<ID3D12Resource> depthStencilResource = nullptr;
 
 
 	//デスクリプタヒープ
@@ -131,6 +132,7 @@ private:
 
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles[MaxResource];
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandlesRT;
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandlesOutline;
 
 	//ビューポート
 	D3D12_VIEWPORT viewport;

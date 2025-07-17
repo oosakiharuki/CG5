@@ -1,5 +1,6 @@
 #pragma once
 #include "DirectXCommon.h"
+#include "MyMath.h"
 
 class PostEffect{
 public:
@@ -11,6 +12,7 @@ public:
 	DirectXCommon* GetDirectXCommon()const { return dxCommon_; }
 
 	void Command();
+	void Command2();
 private:
 	//PSO
 	void RootSignature();
@@ -30,13 +32,22 @@ private:
 	//RootSignature
 	D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature{};
 	D3D12_DESCRIPTOR_RANGE descriptorRange[1] = {};
-	D3D12_ROOT_PARAMETER rootParameters[1] = {};
-	D3D12_STATIC_SAMPLER_DESC staticSamplers[1] = {};
+	D3D12_DESCRIPTOR_RANGE descriptorRangeOutline[1] = {};
+	D3D12_ROOT_PARAMETER rootParameters[3] = {};
+	D3D12_STATIC_SAMPLER_DESC staticSamplers[2] = {};
 
 	Microsoft::WRL::ComPtr < ID3D12RootSignature> rootSignature = nullptr;
 	Microsoft::WRL::ComPtr < ID3D12PipelineState> graphicsPipelineState = nullptr;
+	Microsoft::WRL::ComPtr < ID3D12PipelineState> graphicsPipelineStateDepth = nullptr;
 
 	uint32_t srvIndex;
 	D3D12_CPU_DESCRIPTOR_HANDLE srvHandleCPU;
 	D3D12_GPU_DESCRIPTOR_HANDLE srvHandleGPU;
+
+	D3D12_CPU_DESCRIPTOR_HANDLE srvHandleCPU2;
+	D3D12_GPU_DESCRIPTOR_HANDLE srvHandleGPU2;
+
+	Microsoft::WRL::ComPtr<ID3D12Resource> materialResource;
+	Material* materialData = nullptr;
+
 };

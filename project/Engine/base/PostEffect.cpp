@@ -2,6 +2,7 @@
 #include <SrvManager.h>
 
 using namespace Logger;
+using namespace MyMath;
 
 PostEffect* PostEffect::instance = nullptr;
 
@@ -30,12 +31,16 @@ void PostEffect::RootSignature() {
 	descriptionRootSignature.Flags =
 		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
-	
+
 	descriptorRange[0].BaseShaderRegister = 0;
-	descriptorRange[0].NumDescriptors = 1;
+	descriptorRange[0].NumDescriptors = 1;//t0
 	descriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
 	descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-
+	
+	descriptorRangeOutline[0].BaseShaderRegister = 1;
+	descriptorRangeOutline[0].NumDescriptors = 1;//t1
+	descriptorRangeOutline[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+	descriptorRangeOutline[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
 	//RootParameter作成__
 	descriptionRootSignature.pParameters = rootParameters;
@@ -47,7 +52,19 @@ void PostEffect::RootSignature() {
 	rootParameters[0].DescriptorTable.pDescriptorRanges = descriptorRange;
 	rootParameters[0].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);
 
+	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	rootParameters[1].DescriptorTable.pDescriptorRanges = descriptorRangeOutline;
+	rootParameters[1].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeOutline);
+
+
+	rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	rootParameters[2].Descriptor.ShaderRegister = 0;//Object3d.PS.hlsl の b0
+	
+
 	//2でまとめる
+	//Sampler s0
 	staticSamplers[0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
 	staticSamplers[0].AddressU = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;//clamp = そのテクスチャが伸びる
 	staticSamplers[0].AddressV = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
@@ -56,6 +73,17 @@ void PostEffect::RootSignature() {
 	staticSamplers[0].MaxLOD = D3D12_FLOAT32_MAX;
 	staticSamplers[0].ShaderRegister = 0;
 	staticSamplers[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+
+	//SamplerPoint s1
+	staticSamplers[1].Filter = D3D12_FILTER_MIN_MAG_MIP_POINT;
+	staticSamplers[1].AddressU = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;//clamp = そのテクスチャが伸びる
+	staticSamplers[1].AddressV = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
+	staticSamplers[1].AddressW = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
+	staticSamplers[1].ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
+	staticSamplers[1].MaxLOD = D3D12_FLOAT32_MAX;
+	staticSamplers[1].ShaderRegister = 1;
+	staticSamplers[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+
 	descriptionRootSignature.pStaticSamplers = staticSamplers;
 	descriptionRootSignature.NumStaticSamplers = _countof(staticSamplers);
 
@@ -106,14 +134,14 @@ void PostEffect::GraphicsPipeline() {
 	//RasterizerState
 	D3D12_RASTERIZER_DESC rasterizerDesc{};
 
-	rasterizerDesc.CullMode = D3D12_CULL_MODE_NONE;//表裏表示
+	rasterizerDesc.CullMode = D3D12_CULL_MODE_BACK;//表裏表示
 	rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
 
 	//shaderのコンパイラ
 	Microsoft::WRL::ComPtr<IDxcBlob> vertexShaderBlob = dxCommon_->CompileShader(L"resource/shaders/Fullscreen.VS.hlsl", L"vs_6_0");//フルスクリーン処理(共通処理)
 	assert(vertexShaderBlob != nullptr);
 
-	Microsoft::WRL::ComPtr<IDxcBlob> pixelShaderBlob = dxCommon_->CompileShader(L"resource/shaders/GaussianFilter.PS.hlsl", L"ps_6_0");//ココのみ変化させる
+	Microsoft::WRL::ComPtr<IDxcBlob> pixelShaderBlob = dxCommon_->CompileShader(L"resource/shaders/DepthBasedOutline.PS.hlsl", L"ps_6_0");//ココのみ変化させる
 	assert(pixelShaderBlob != nullptr);
 
 
@@ -157,11 +185,41 @@ void PostEffect::GraphicsPipeline() {
 
 	SrvManager::GetInstance()->CreateSRVforTexture2D(srvIndex, dxCommon_->GetRenderTexture() , DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, 1);
 
+
+	srvIndex = SrvManager::GetInstance()->Allocate();
+	srvHandleCPU2 = SrvManager::GetInstance()->GetCPUDescriptorHandle(srvIndex);
+	srvHandleGPU2 = SrvManager::GetInstance()->GetGPUDescriptorHandle(srvIndex);
+
+	//D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
+	//srvDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+	//srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	//srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	//srvDesc.Texture2D.MipLevels = 1;
+	//dxCommon_->GetDevice()->CreateShaderResourceView(dxCommon_->GetOutlineResource(), &srvDesc, SrvManager::GetInstance()->GetCPUDescriptorHandle(srvIndex));
+	//// ↓
+
+	SrvManager::GetInstance()->CreateSRVforTexture2D(srvIndex, dxCommon_->GetOutlineResource(), DXGI_FORMAT_R24_UNORM_X8_TYPELESS, 1);
+
+	//Model用マテリアル
+	//マテリアル用のリソース
+	materialResource = dxCommon_->CreateBufferResource(sizeof(Material));
+	//書き込むためのアドレス
+	materialResource->Map(0, nullptr, reinterpret_cast<void**>(&materialData));
+	//色の設定
+	materialData->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+	materialData->enableLighting = false;
+	materialData->uvTransform = MakeIdentity4x4();
+	materialData->shininess = 0;
+	materialData->projectionInverse = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+
 }
 
 void PostEffect::Command() {
 	dxCommon_->GetCommandList()->SetGraphicsRootSignature(rootSignature.Get());
 	dxCommon_->GetCommandList()->SetPipelineState(graphicsPipelineState.Get());
+
 	dxCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(0, srvHandleGPU);
+	dxCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(1, srvHandleGPU2);
+	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(2,materialResource->GetGPUVirtualAddress());
 	dxCommon_->GetCommandList()->DrawInstanced(3, 1, 0, 0);
 }

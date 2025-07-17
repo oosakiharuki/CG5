@@ -35,6 +35,7 @@
 		float padding[3];
 		Matrix4x4 uvTransform;
 		float shininess;
+		Vector4 projectionInverse;
 	};
 
 	struct DirectionalLight {
