@@ -30,13 +30,32 @@ void PostEffectManager::Change(int prev, int current) {
 	//scene_ = current;
 	switch (current)
 	{
+	//case Mode_CopyImage:
+	//	break;
+	case Mode_BoxFillter:
+		effectArr_[current] = new BoxFilter();
+		break;
+	//case Mode_DepthBasedOutline:
+	//	break;
+	case Mode_GaussianFillter:
+		effectArr_[current] = new GaussianFilter();
+		break;
+	case Mode_Grayscale:
+		effectArr_[current] = new Grayscale();
+		break;
+	case Mode_LuminanceBacedOutline:
+		effectArr_[current] = new LuminanceBasedOutline();
+		break;
 	case Mode_RadialBlur:
 		effectArr_[current] = new RadialBlur();
 		break;
 	case Mode_Vignette:
 		effectArr_[current] = new Vignette();
 		break;
+	default:
+		break;
 	}
+
 }
 void PostEffectManager::Initialize(DirectXCommon* dxCommon) {
 	

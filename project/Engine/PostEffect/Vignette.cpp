@@ -158,6 +158,6 @@ void Vignette::Command() {
 
 void Vignette::EffectChange() {
 	if (Input::GetInstance()->TriggerKey(DIK_F1)) {
-		effectNo = EFFECT::Mode_RadialBlur;
+		effectNo = 0;
 	}
 }

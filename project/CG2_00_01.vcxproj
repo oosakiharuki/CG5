@@ -111,6 +111,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\base\PostEffect.cpp" />
     <ClCompile Include="Engine\base\SrvManager.cpp" />
     <ClCompile Include="Engine\Framework.cpp" />
+    <ClCompile Include="Engine\PostEffect\BoxFilter.cpp" />
+    <ClCompile Include="Engine\PostEffect\GaussianFilter.cpp" />
+    <ClCompile Include="Engine\PostEffect\Grayscale.cpp" />
+    <ClCompile Include="Engine\PostEffect\LuminanceBasedOutline.cpp" />
     <ClCompile Include="Engine\PostEffect\PostEffectManager.cpp" />
     <ClCompile Include="Engine\PostEffect\RadialBlur.cpp" />
     <ClCompile Include="Engine\PostEffect\Vignette.cpp" />
@@ -157,6 +161,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\base\PostEffect.h" />
     <ClInclude Include="Engine\base\SrvManager.h" />
     <ClInclude Include="Engine\Framework.h" />
+    <ClInclude Include="Engine\PostEffect\BoxFilter.h" />
+    <ClInclude Include="Engine\PostEffect\GaussianFilter.h" />
+    <ClInclude Include="Engine\PostEffect\Grayscale.h" />
+    <ClInclude Include="Engine\PostEffect\LuminanceBasedOutline.h" />
     <ClInclude Include="Engine\PostEffect\PostEffectManager.h" />
     <ClInclude Include="Engine\PostEffect\RadialBlur.h" />
     <ClInclude Include="Engine\PostEffect\Vignette.h" />

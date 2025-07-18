@@ -2,6 +2,10 @@
 #include "IPostEffects.h"
 #include "RadialBlur.h"
 #include "Vignette.h"
+#include "BoxFilter.h"
+#include "GaussianFilter.h"
+#include "LuminanceBasedOutline.h"
+#include "Grayscale.h"
 
 class PostEffectManager {
 public:

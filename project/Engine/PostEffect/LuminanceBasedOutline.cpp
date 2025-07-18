@@ -1,20 +1,20 @@
-#include "RadialBlur.h"
+#include "LuminanceBasedOutline.h"
 #include <SrvManager.h>
 
 using namespace Logger;
 
-void RadialBlur::Finalize() {
+void LuminanceBasedOutline::Finalize() {
 	//delete instance;
 	//instance = nullptr;
 }
 
-void RadialBlur::Initialize(DirectXCommon* dxCommon) {
+void LuminanceBasedOutline::Initialize(DirectXCommon* dxCommon) {
 	dxCommon_ = dxCommon;
 
 	GraphicsPipeline();
 }
 
-void RadialBlur::RootSignature() {
+void LuminanceBasedOutline::RootSignature() {
 
 	//RootSignature
 	descriptionRootSignature.Flags =
@@ -51,8 +51,8 @@ void RadialBlur::RootSignature() {
 
 }
 
-void RadialBlur::GraphicsPipeline() {
-
+void LuminanceBasedOutline::GraphicsPipeline() {
+	
 	RootSignature();
 
 	//バイナリを元に生成
@@ -103,7 +103,7 @@ void RadialBlur::GraphicsPipeline() {
 	Microsoft::WRL::ComPtr<IDxcBlob> vertexShaderBlob = dxCommon_->CompileShader(L"resource/shaders/Fullscreen.VS.hlsl", L"vs_6_0");
 	assert(vertexShaderBlob != nullptr);
 
-	Microsoft::WRL::ComPtr<IDxcBlob> pixelShaderBlob = dxCommon_->CompileShader(L"resource/shaders/RadialBlur.PS.hlsl", L"ps_6_0");
+	Microsoft::WRL::ComPtr<IDxcBlob> pixelShaderBlob = dxCommon_->CompileShader(L"resource/shaders/LuminanceBasedOutline.PS.hlsl", L"ps_6_0");
 	assert(pixelShaderBlob != nullptr);
 
 
@@ -149,14 +149,14 @@ void RadialBlur::GraphicsPipeline() {
 
 }
 
-void RadialBlur::Command() {
+void LuminanceBasedOutline::Command() {
 	dxCommon_->GetCommandList()->SetGraphicsRootSignature(rootSignature.Get());
 	dxCommon_->GetCommandList()->SetPipelineState(graphicsPipelineState.Get());
 	dxCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(0, srvHandleGPU);
 	dxCommon_->GetCommandList()->DrawInstanced(3, 1, 0, 0);
 }
 
-void RadialBlur::EffectChange() {
+void LuminanceBasedOutline::EffectChange() {
 	if (Input::GetInstance()->TriggerKey(DIK_F1)) {
 		effectNo++;
 	}

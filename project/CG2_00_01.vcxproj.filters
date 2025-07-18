@@ -153,6 +153,18 @@
     <ClCompile Include="Engine\PostEffect\Vignette.cpp">
       <Filter>ソース ファイル\Engine\PostEffect</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\PostEffect\BoxFilter.cpp">
+      <Filter>ソース ファイル\Engine\PostEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\PostEffect\GaussianFilter.cpp">
+      <Filter>ソース ファイル\Engine\PostEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\PostEffect\LuminanceBasedOutline.cpp">
+      <Filter>ソース ファイル\Engine\PostEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\PostEffect\Grayscale.cpp">
+      <Filter>ソース ファイル\Engine\PostEffect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\2d\Sprite.h">
@@ -276,6 +288,18 @@
       <Filter>ソース ファイル\Engine\PostEffect</Filter>
     </ClInclude>
     <ClInclude Include="Engine\PostEffect\Vignette.h">
+      <Filter>ソース ファイル\Engine\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\PostEffect\BoxFilter.h">
+      <Filter>ソース ファイル\Engine\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\PostEffect\GaussianFilter.h">
+      <Filter>ソース ファイル\Engine\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\PostEffect\LuminanceBasedOutline.h">
+      <Filter>ソース ファイル\Engine\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\PostEffect\Grayscale.h">
       <Filter>ソース ファイル\Engine\PostEffect</Filter>
     </ClInclude>
   </ItemGroup>
