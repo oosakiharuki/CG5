@@ -37,6 +37,9 @@
     <Filter Include="ソース ファイル\Engine\2d">
       <UniqueIdentifier>{60c51db4-57e8-4c52-a251-89af31add87e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Engine\PostEffect">
+      <UniqueIdentifier>{8892f8f3-b441-41f9-bb94-79b6b5f258be}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\2d\Sprite.cpp">
@@ -137,6 +140,15 @@
     </ClCompile>
     <ClCompile Include="Engine\base\PostEffect.cpp">
       <Filter>ソース ファイル\Engine\base</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\PostEffect\IPostEffects.cpp">
+      <Filter>ソース ファイル\Engine\PostEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\PostEffect\RadialBlur.cpp">
+      <Filter>ソース ファイル\Engine\PostEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\PostEffect\PostEffectManager.cpp">
+      <Filter>ソース ファイル\Engine\PostEffect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -250,6 +262,15 @@
     </ClInclude>
     <ClInclude Include="Engine\base\PostEffect.h">
       <Filter>ソース ファイル\Engine\base</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\PostEffect\IPostEffects.h">
+      <Filter>ソース ファイル\Engine\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\PostEffect\RadialBlur.h">
+      <Filter>ソース ファイル\Engine\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\PostEffect\PostEffectManager.h">
+      <Filter>ソース ファイル\Engine\PostEffect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

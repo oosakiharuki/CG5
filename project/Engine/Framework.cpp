@@ -42,8 +42,12 @@ void Framework::Initialize() {
 	particleCommon->Initialize(dxCommon);
 	ParticleManager::GetInstance()->Initialize(dxCommon, srvManager);
 
-	postEffect = PostEffect::GetInstance();
-	postEffect->Initialize(dxCommon);
+	//postEffect = PostEffect::GetInstance();
+	//postEffect->Initialize(dxCommon);
+
+	postEffectM = PostEffectManager::GetInstance();
+	postEffectM->Initialize(dxCommon);
+
 }
 
 void Framework::Update() {
@@ -83,7 +87,8 @@ void Framework::Finalize() {
 	
 	particleCommon->Finalize();
 
-	postEffect->Finalize();
+	//postEffect->Finalize();
+	postEffectM->Finalize();
 }
 
 

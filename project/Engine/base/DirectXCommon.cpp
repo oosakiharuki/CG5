@@ -13,6 +13,9 @@
 
 #include "PostEffect.h"
 
+#include "PostEffectManager.h"
+
+
 //#define UNREFERENCED_PARMETER(hr)
 
 using namespace Microsoft::WRL;
@@ -536,7 +539,7 @@ void DirectXCommon::PreDraw() {
 	//TransitionBarrierを張る
 	commandList->ResourceBarrier(1, &barrier);
 
-	PostEffect::GetInstance()->Command();
+	PostEffectManager::GetInstance()->Command();
 
 	//バリアを貼る対象のリソース。現在のバッファに対して行う
 	barrier.Transition.pResource = depthStencilResource.Get();//こいつ

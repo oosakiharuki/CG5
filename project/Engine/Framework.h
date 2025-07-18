@@ -14,7 +14,10 @@
 #include "ImGuiManager.h"
 #include "D3DResorceLeakChecker.h"
 
-#include "PostEffect.h"
+//#include "PostEffect.h"
+
+#include "PostEffectManager.h"
+
 
 class Framework{
 public:
@@ -37,7 +40,10 @@ private:
 	Object3dCommon* object3dCommon = nullptr;
 	ModelCommon* modelCommon = nullptr;
 	ParticleCommon* particleCommon = nullptr;
-	PostEffect* postEffect = nullptr;
+	//PostEffect* postEffect = nullptr;
+
+
+	PostEffectManager* postEffectM = nullptr;
 
 	bool isRequst = false;
 };
