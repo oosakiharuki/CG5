@@ -309,5 +309,8 @@
     <FxCompile Include="resource\shaders\DepthBasedOutline.PS.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
+    <FxCompile Include="resource\shaders\RadialBlur.PS.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
