@@ -1,6 +1,7 @@
 #pragma once
 #include "IPostEffects.h"
 #include "RadialBlur.h"
+#include "Vignette.h"
 
 class PostEffectManager {
 public:
@@ -16,7 +17,7 @@ private:
 	void Change(int prev, int current);//シーン入れ替え
 
 	//最大数
-	static const uint32_t effectNum = 7;
+	static const uint32_t effectNum = 8;
 
 	IPostEffects* effectArr_[effectNum];
 

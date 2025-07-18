@@ -30,21 +30,21 @@ void PostEffectManager::Change(int prev, int current) {
 	//scene_ = current;
 	switch (current)
 	{
-	case radialBlur:
+	case Mode_RadialBlur:
 		effectArr_[current] = new RadialBlur();
 		break;
-	//case boxFillter:
-	//	effectArr_[current] = new GameScene();
-	//	break;
+	case Mode_Vignette:
+		effectArr_[current] = new Vignette();
+		break;
 	}
 }
 void PostEffectManager::Initialize(DirectXCommon* dxCommon) {
 	
 	
-	effectArr_[radialBlur] = new RadialBlur();
+	effectArr_[Mode_RadialBlur] = new RadialBlur();
 
 	prevNo_ = 0;
-	currentNo_ = radialBlur;
+	currentNo_ = Mode_RadialBlur;
 	
 
 	dxCommon_ = dxCommon;
@@ -60,6 +60,8 @@ void PostEffectManager::Update() {
 		Change(prevNo_, currentNo_);
 		effectArr_[currentNo_]->Initialize(dxCommon_);
 	}
+	
+	effectArr_[currentNo_]->EffectChange();
 
 }
 

@@ -1,20 +1,20 @@
-#include "RadialBlur.h"
+#include "Vignette.h"
 #include <SrvManager.h>
 
 using namespace Logger;
 
-void RadialBlur::Finalize() {
+void Vignette::Finalize() {
 	//delete instance;
 	//instance = nullptr;
 }
 
-void RadialBlur::Initialize(DirectXCommon* dxCommon) {
+void Vignette::Initialize(DirectXCommon* dxCommon) {
 	dxCommon_ = dxCommon;
 
 	GraphicsPipeline();
 }
 
-void RadialBlur::RootSignature() {
+void Vignette::RootSignature() {
 
 	//RootSignature
 	descriptionRootSignature.Flags =
@@ -51,8 +51,8 @@ void RadialBlur::RootSignature() {
 
 }
 
-void RadialBlur::GraphicsPipeline() {
-
+void Vignette::GraphicsPipeline() {
+	
 	RootSignature();
 
 	//バイナリを元に生成
@@ -103,7 +103,7 @@ void RadialBlur::GraphicsPipeline() {
 	Microsoft::WRL::ComPtr<IDxcBlob> vertexShaderBlob = dxCommon_->CompileShader(L"resource/shaders/Fullscreen.VS.hlsl", L"vs_6_0");
 	assert(vertexShaderBlob != nullptr);
 
-	Microsoft::WRL::ComPtr<IDxcBlob> pixelShaderBlob = dxCommon_->CompileShader(L"resource/shaders/RadialBlur.PS.hlsl", L"ps_6_0");
+	Microsoft::WRL::ComPtr<IDxcBlob> pixelShaderBlob = dxCommon_->CompileShader(L"resource/shaders/Vignette.PS.hlsl", L"ps_6_0");
 	assert(pixelShaderBlob != nullptr);
 
 
@@ -149,15 +149,15 @@ void RadialBlur::GraphicsPipeline() {
 
 }
 
-void RadialBlur::Command() {
+void Vignette::Command() {
 	dxCommon_->GetCommandList()->SetGraphicsRootSignature(rootSignature.Get());
 	dxCommon_->GetCommandList()->SetPipelineState(graphicsPipelineState.Get());
 	dxCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(0, srvHandleGPU);
 	dxCommon_->GetCommandList()->DrawInstanced(3, 1, 0, 0);
 }
 
-void RadialBlur::EffectChange() {
+void Vignette::EffectChange() {
 	if (Input::GetInstance()->TriggerKey(DIK_F1)) {
-		effectNo = EFFECT::Mode_Vignette;
+		effectNo = EFFECT::Mode_RadialBlur;
 	}
 }

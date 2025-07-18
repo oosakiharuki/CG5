@@ -113,6 +113,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Framework.cpp" />
     <ClCompile Include="Engine\PostEffect\PostEffectManager.cpp" />
     <ClCompile Include="Engine\PostEffect\RadialBlur.cpp" />
+    <ClCompile Include="Engine\PostEffect\Vignette.cpp" />
     <ClCompile Include="Engine\scene\GameManager.cpp" />
     <ClCompile Include="Engine\scene\GameScene.cpp" />
     <ClCompile Include="Engine\input\Input.cpp">
@@ -158,6 +159,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Framework.h" />
     <ClInclude Include="Engine\PostEffect\PostEffectManager.h" />
     <ClInclude Include="Engine\PostEffect\RadialBlur.h" />
+    <ClInclude Include="Engine\PostEffect\Vignette.h" />
     <ClInclude Include="Engine\scene\GameManager.h" />
     <ClInclude Include="Engine\scene\GameScene.h" />
     <ClInclude Include="Engine\input\Input.h" />

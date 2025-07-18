@@ -29,6 +29,9 @@ void MyGame::Draw() {
 	DirectXCommon::GetInstance()->RenderTexturePreDraw();// 対 renderTexture
 
 	gameScene->Draw();
+	
+	//ポストエフェクト更新/変更
+	PostEffectManager::GetInstance()->Update();
 
 	DirectXCommon::GetInstance()->RenderTexturePostDraw();
 

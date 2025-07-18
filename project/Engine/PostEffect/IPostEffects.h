@@ -1,16 +1,17 @@
 #pragma once
 #include <cstdint>
 #include "DirectXCommon.h"
+#include "Input.h"
 
 enum EFFECT {
-	copyImage,//None
-	boxFillter,
-	depthBasedOutline,
-	gaussianFillter,
-	grayscale,
-	luminanceBacedOutline,
-	radialBlur,
-	vignette,
+	Mode_CopyImage,//None
+	Mode_BoxFillter,
+	Mode_DepthBasedOutline,
+	Mode_GaussianFillter,
+	Mode_Grayscale,
+	Mode_LuminanceBacedOutline,
+	Mode_RadialBlur,
+	Mode_Vignette,
 };
 
 class IPostEffects {
@@ -27,6 +28,8 @@ public:
 	//PSO
 	virtual void RootSignature() = 0;
 	virtual void GraphicsPipeline() = 0;
+
+	virtual void EffectChange() = 0;
 
 	virtual ~IPostEffects();
 };

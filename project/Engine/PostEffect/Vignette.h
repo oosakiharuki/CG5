@@ -1,8 +1,8 @@
 #pragma once
 #include "IPostEffects.h"
 
-class  RadialBlur : public IPostEffects {
-public:	
+class Vignette : public IPostEffects {
+public:
 	void Finalize() override;
 
 	void Initialize(DirectXCommon* dxCommon) override;
