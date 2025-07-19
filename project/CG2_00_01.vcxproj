@@ -112,6 +112,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Framework.cpp" />
     <ClCompile Include="Engine\PostEffect\BoxFilter.cpp" />
     <ClCompile Include="Engine\PostEffect\DepthBasedOutline.cpp" />
+    <ClCompile Include="Engine\PostEffect\Dissolve.cpp" />
     <ClCompile Include="Engine\PostEffect\GaussianFilter.cpp" />
     <ClCompile Include="Engine\PostEffect\Grayscale.cpp" />
     <ClCompile Include="Engine\PostEffect\LuminanceBasedOutline.cpp" />
@@ -163,6 +164,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Framework.h" />
     <ClInclude Include="Engine\PostEffect\BoxFilter.h" />
     <ClInclude Include="Engine\PostEffect\DepthBasedOutline.h" />
+    <ClInclude Include="Engine\PostEffect\Dissolve.h" />
     <ClInclude Include="Engine\PostEffect\GaussianFilter.h" />
     <ClInclude Include="Engine\PostEffect\Grayscale.h" />
     <ClInclude Include="Engine\PostEffect\LuminanceBasedOutline.h" />
@@ -224,6 +226,12 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </None>
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="resource\shaders\Dissolve.PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
     <FxCompile Include="resource\shaders\DepthBasedOutline.PS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>

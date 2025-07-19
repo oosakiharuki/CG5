@@ -7,6 +7,7 @@ enum EFFECT {
 	Mode_Normal_Image,//None
 	Mode_BoxFillter,
 	Mode_DepthBasedOutline,
+	Mode_Dissolve,
 	Mode_GaussianFillter,
 	Mode_Grayscale,
 	Mode_LuminanceBacedOutline,

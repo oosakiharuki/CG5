@@ -8,6 +8,7 @@
 #include "Grayscale.h"
 #include "Normal_Image.h"
 #include "DepthBasedOutline.h"
+#include "Dissolve.h"
 
 class PostEffectManager {
 public:
@@ -23,7 +24,7 @@ private:
 	void Change(int prev, int current);//シーン入れ替え
 
 	//最大数
-	static const uint32_t effectNum = 8;
+	static const uint32_t effectNum = 9;
 
 	IPostEffects* effectArr_[effectNum];
 

@@ -39,6 +39,9 @@ void PostEffectManager::Change(int prev, int current) {
 	case Mode_DepthBasedOutline:
 		effectArr_[current] = new DepthBasedOutline();
 		break;
+	case Mode_Dissolve:
+		effectArr_[current] = new Dissolve();
+		break;
 	case Mode_GaussianFillter:
 		effectArr_[current] = new GaussianFilter();
 		break;

@@ -17,6 +17,9 @@ void MyGame::Update() {
 #endif //  USE_IMGUI
 
 	gameScene->Update();
+	
+	//ポストエフェクト更新/変更
+	PostEffectManager::GetInstance()->Update();
 
 #ifdef  USE_IMGUI
 	ImGuiManager::GetInstance()->End();
@@ -30,8 +33,6 @@ void MyGame::Draw() {
 
 	gameScene->Draw();
 	
-	//ポストエフェクト更新/変更
-	PostEffectManager::GetInstance()->Update();
 
 	DirectXCommon::GetInstance()->RenderTexturePostDraw();
 
