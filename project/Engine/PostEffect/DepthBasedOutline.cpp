@@ -1,31 +1,21 @@
-#include "PostEffect.h"
+#include "DepthBasedOutline.h"
 #include <SrvManager.h>
 
 using namespace Logger;
 using namespace MyMath;
 
-PostEffect* PostEffect::instance = nullptr;
-
-uint32_t PostEffect::kSRVIndexTop = 1;
-
-PostEffect* PostEffect::GetInstance() {
-	if (instance == nullptr) {
-		instance = new PostEffect;
-	}
-	return instance;
-}
-void PostEffect::Finalize() {
-	delete instance;
-	instance = nullptr;
+void DepthBasedOutline::Finalize() {
+	//delete instance;
+	//instance = nullptr;
 }
 
-void PostEffect::Initialize(DirectXCommon* dxCommon) {
+void DepthBasedOutline::Initialize(DirectXCommon* dxCommon) {
 	dxCommon_ = dxCommon;
 
 	GraphicsPipeline();
 }
 
-void PostEffect::RootSignature() {
+void DepthBasedOutline::RootSignature() {
 
 	//RootSignature
 	descriptionRootSignature.Flags =
@@ -36,7 +26,7 @@ void PostEffect::RootSignature() {
 	descriptorRange[0].NumDescriptors = 1;//t0
 	descriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
 	descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-	
+
 	descriptorRangeOutline[0].BaseShaderRegister = 1;
 	descriptorRangeOutline[0].NumDescriptors = 1;//t1
 	descriptorRangeOutline[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
@@ -61,7 +51,7 @@ void PostEffect::RootSignature() {
 	rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	rootParameters[2].Descriptor.ShaderRegister = 0;//Object3d.PS.hlsl の b0
-	
+
 
 	//2でまとめる
 	//Sampler s0
@@ -89,8 +79,7 @@ void PostEffect::RootSignature() {
 
 }
 
-void PostEffect::GraphicsPipeline() {
-
+void DepthBasedOutline::GraphicsPipeline() {
 	RootSignature();
 
 	//バイナリを元に生成
@@ -141,7 +130,7 @@ void PostEffect::GraphicsPipeline() {
 	Microsoft::WRL::ComPtr<IDxcBlob> vertexShaderBlob = dxCommon_->CompileShader(L"resource/shaders/Fullscreen.VS.hlsl", L"vs_6_0");//フルスクリーン処理(共通処理)
 	assert(vertexShaderBlob != nullptr);
 
-	Microsoft::WRL::ComPtr<IDxcBlob> pixelShaderBlob = dxCommon_->CompileShader(L"resource/shaders/RadialBlur.PS.hlsl", L"ps_6_0");//ココのみ変化させる
+	Microsoft::WRL::ComPtr<IDxcBlob> pixelShaderBlob = dxCommon_->CompileShader(L"resource/shaders/DepthBasedOutline.PS.hlsl", L"ps_6_0");//ココのみ変化させる
 	assert(pixelShaderBlob != nullptr);
 
 
@@ -177,13 +166,12 @@ void PostEffect::GraphicsPipeline() {
 	hr = dxCommon_->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc, IID_PPV_ARGS(&graphicsPipelineState));
 	assert(SUCCEEDED(hr));
 
-
 	srvIndex = SrvManager::GetInstance()->Allocate();
 	srvHandleCPU = SrvManager::GetInstance()->GetCPUDescriptorHandle(srvIndex);
 	srvHandleGPU = SrvManager::GetInstance()->GetGPUDescriptorHandle(srvIndex);
 
 
-	SrvManager::GetInstance()->CreateSRVforTexture2D(srvIndex, dxCommon_->GetRenderTexture() , DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, 1);
+	SrvManager::GetInstance()->CreateSRVforTexture2D(srvIndex, dxCommon_->GetRenderTexture(), DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, 1);
 
 
 	srvIndex = SrvManager::GetInstance()->Allocate();
@@ -214,12 +202,19 @@ void PostEffect::GraphicsPipeline() {
 
 }
 
-void PostEffect::Command() {
+void DepthBasedOutline::Command() {
 	dxCommon_->GetCommandList()->SetGraphicsRootSignature(rootSignature.Get());
 	dxCommon_->GetCommandList()->SetPipelineState(graphicsPipelineState.Get());
-
+	//通常の描画
 	dxCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(0, srvHandleGPU);
+	//outlineの描画
 	dxCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(1, srvHandleGPU2);
-	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(2,materialResource->GetGPUVirtualAddress());
+	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(2, materialResource->GetGPUVirtualAddress());
 	dxCommon_->GetCommandList()->DrawInstanced(3, 1, 0, 0);
+}
+
+void DepthBasedOutline::EffectChange() {
+	if (Input::GetInstance()->TriggerKey(DIK_F1)) {
+		effectNo++;
+	}
 }

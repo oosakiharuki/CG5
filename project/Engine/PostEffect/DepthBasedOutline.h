@@ -1,31 +1,21 @@
 #pragma once
-#include "DirectXCommon.h"
+#include "IPostEffects.h"
 #include "MyMath.h"
 
-class PostEffect{
+class DepthBasedOutline : public IPostEffects {
 public:
+	void Finalize() override;
 
-	static PostEffect* GetInstance();
-	void Finalize();
-
-	void Initialize(DirectXCommon* dxCommon);
+	void Initialize(DirectXCommon* dxCommon) override;
 	DirectXCommon* GetDirectXCommon()const { return dxCommon_; }
 
-	void Command();
-	void Command2();
+	void Command() override;
 private:
 	//PSO
-	void RootSignature();
-	void GraphicsPipeline();
+	void RootSignature() override;
+	void GraphicsPipeline() override;
 
-	static PostEffect* instance;
-
-	PostEffect() = default;
-	~PostEffect() = default;
-	PostEffect(PostEffect&) = default;
-	PostEffect& operator=(PostEffect&) = default;
-
-	static uint32_t kSRVIndexTop;
+	void EffectChange() override;
 
 	DirectXCommon* dxCommon_;
 

@@ -4,9 +4,9 @@
 #include "Input.h"
 
 enum EFFECT {
-	//Mode_CopyImage,//None
+	Mode_Normal_Image,//None
 	Mode_BoxFillter,
-	//Mode_DepthBasedOutline,
+	Mode_DepthBasedOutline,
 	Mode_GaussianFillter,
 	Mode_Grayscale,
 	Mode_LuminanceBacedOutline,

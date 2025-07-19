@@ -30,13 +30,15 @@ void PostEffectManager::Change(int prev, int current) {
 	//scene_ = current;
 	switch (current)
 	{
-	//case Mode_CopyImage:
-	//	break;
+	case Mode_Normal_Image:
+		effectArr_[current] = new Normal_Image();
+		break;
 	case Mode_BoxFillter:
 		effectArr_[current] = new BoxFilter();
 		break;
-	//case Mode_DepthBasedOutline:
-	//	break;
+	case Mode_DepthBasedOutline:
+		effectArr_[current] = new DepthBasedOutline();
+		break;
 	case Mode_GaussianFillter:
 		effectArr_[current] = new GaussianFilter();
 		break;
@@ -60,10 +62,10 @@ void PostEffectManager::Change(int prev, int current) {
 void PostEffectManager::Initialize(DirectXCommon* dxCommon) {
 	
 	
-	effectArr_[Mode_RadialBlur] = new RadialBlur();
+	effectArr_[Mode_Normal_Image] = new Normal_Image();
 
 	prevNo_ = 0;
-	currentNo_ = Mode_RadialBlur;
+	currentNo_ = Mode_Normal_Image;
 	
 
 	dxCommon_ = dxCommon;

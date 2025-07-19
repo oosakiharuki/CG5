@@ -14,8 +14,6 @@
 #include "ImGuiManager.h"
 #include "D3DResorceLeakChecker.h"
 
-//#include "PostEffect.h"
-
 #include "PostEffectManager.h"
 
 

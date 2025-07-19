@@ -6,6 +6,8 @@
 #include "GaussianFilter.h"
 #include "LuminanceBasedOutline.h"
 #include "Grayscale.h"
+#include "Normal_Image.h"
+#include "DepthBasedOutline.h"
 
 class PostEffectManager {
 public:

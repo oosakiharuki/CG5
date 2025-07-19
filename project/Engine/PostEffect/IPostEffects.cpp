@@ -1,5 +1,5 @@
 #include "IPostEffects.h"
 
-int IPostEffects::effectNo = Mode_RadialBlur;
+int IPostEffects::effectNo = Mode_Normal_Image;
 
 IPostEffects::~IPostEffects() {}
