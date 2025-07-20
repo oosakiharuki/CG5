@@ -3,6 +3,13 @@
 Texture2D<float32_t4> gTexture : register(t0);
 SamplerState gSampler : register(s0);
 
+struct GrayFunction
+{
+    int32_t isSepia;
+};
+
+ConstantBuffer<GrayFunction> gMaterial : register(b0);
+
 struct PixelShaderOutput
 {
     float32_t4 color : SV_TARGET0;
@@ -18,7 +25,10 @@ PixelShaderOutput main(VartexShaderOutput input)
     output.color.rgb = float32_t3(value, value, value);
     
     //セピア調
-    output.color.rgb = value * float32_t3(1.0f, 74.0f / 107.0f, 43.0f / 107.0f);
+    if (gMaterial.isSepia)
+    {
+        output.color.rgb = value * float32_t3(1.0f, 74.0f / 107.0f, 43.0f / 107.0f);
+    }
     
     return output;
 }

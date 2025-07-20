@@ -150,14 +150,16 @@ void RadialBlur::GraphicsPipeline() {
 }
 
 void RadialBlur::Command() {
+
 	dxCommon_->GetCommandList()->SetGraphicsRootSignature(rootSignature.Get());
 	dxCommon_->GetCommandList()->SetPipelineState(graphicsPipelineState.Get());
 	dxCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(0, srvHandleGPU);
 	dxCommon_->GetCommandList()->DrawInstanced(3, 1, 0, 0);
 }
 
-void RadialBlur::EffectChange() {
-	if (Input::GetInstance()->TriggerKey(DIK_F1)) {
-		effectNo++;
-	}
+void RadialBlur::EffectUpdate() {
+	
+#ifdef _DEBUG
+	ImGui::Text("RadialBlur");
+#endif
 }

@@ -2,6 +2,7 @@
 #include <cstdint>
 #include "DirectXCommon.h"
 #include "Input.h"
+#include "ImGuiManager.h"
 
 enum EFFECT {
 	Mode_Normal_Image,//None
@@ -31,7 +32,9 @@ public:
 	virtual void RootSignature() = 0;
 	virtual void GraphicsPipeline() = 0;
 
-	virtual void EffectChange() = 0;
+	virtual void EffectUpdate() = 0;
 
 	virtual ~IPostEffects();
+
+	void ChangeNumber();
 };

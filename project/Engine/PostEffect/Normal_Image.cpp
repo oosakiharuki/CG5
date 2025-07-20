@@ -156,8 +156,10 @@ void Normal_Image::Command() {
 	dxCommon_->GetCommandList()->DrawInstanced(3, 1, 0, 0);
 }
 
-void Normal_Image::EffectChange() {
-	if (Input::GetInstance()->TriggerKey(DIK_F1)) {
-		effectNo++;
-	}
+void Normal_Image::EffectUpdate() {
+
+#ifdef _DEBUG
+	ImGui::Text("Normal_Image(copyImage)");
+#endif
+
 }

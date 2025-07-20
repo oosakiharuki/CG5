@@ -156,8 +156,10 @@ void GaussianFilter::Command() {
 	dxCommon_->GetCommandList()->DrawInstanced(3, 1, 0, 0);
 }
 
-void GaussianFilter::EffectChange() {
-	if (Input::GetInstance()->TriggerKey(DIK_F1)) {
-		effectNo++;
-	}
+void GaussianFilter::EffectUpdate() {
+
+#ifdef _DEBUG
+	ImGui::Text("GaussianFilter");
+#endif
+
 }

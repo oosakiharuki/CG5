@@ -165,10 +165,11 @@ void Random::Command() {
 	dxCommon_->GetCommandList()->DrawInstanced(3, 1, 0, 0);
 }
 
-void Random::EffectChange() {
+void Random::EffectUpdate() {
 	randomFunction->randomeTimer += 0.1f;
 
-	if (Input::GetInstance()->TriggerKey(DIK_F1)) {
-		effectNo = 0;
-	}
+#ifdef _DEBUG
+	ImGui::Text("Random");
+#endif
+
 }

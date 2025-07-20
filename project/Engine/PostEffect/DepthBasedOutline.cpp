@@ -213,8 +213,10 @@ void DepthBasedOutline::Command() {
 	dxCommon_->GetCommandList()->DrawInstanced(3, 1, 0, 0);
 }
 
-void DepthBasedOutline::EffectChange() {
-	if (Input::GetInstance()->TriggerKey(DIK_F1)) {
-		effectNo++;
-	}
+void DepthBasedOutline::EffectUpdate() {
+
+#ifdef _DEBUG
+	ImGui::Text("DepthBasedOutline");
+#endif
+
 }

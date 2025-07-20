@@ -2,8 +2,6 @@
 #include <SrvManager.h>
 #include <TextureManager.h>
 
-#include "ImGuiManager.h"
-
 using namespace Logger;
 
 void Dissolve::Finalize() {
@@ -187,19 +185,14 @@ void Dissolve::Command() {
 	dxCommon_->GetCommandList()->DrawInstanced(3, 1, 0, 0);
 }
 
-void Dissolve::EffectChange() {
+void Dissolve::EffectUpdate() {
 
 #ifdef _DEBUG
 
-	ImGui::Begin("Dissolve");
+	ImGui::Text("Dissolve");
 	ImGui::SliderFloat("degress", &threshold->degress, 0.0f, 1.0f);
 	ImGui::SliderFloat("egdeSize", &threshold->egdeSize, 0.0f, 0.1f);
 	//ImGui::SliderFloat3("egdeColor", &threshold->egdeColor.x, 0.0f, 1.0f);
-	ImGui::End();
 
 #endif
-
-	if (Input::GetInstance()->TriggerKey(DIK_F1)) {
-		effectNo++;
-	}
 }

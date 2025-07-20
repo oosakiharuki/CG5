@@ -156,8 +156,12 @@ void BoxFilter::Command() {
 	dxCommon_->GetCommandList()->DrawInstanced(3, 1, 0, 0);
 }
 
-void BoxFilter::EffectChange() {
-	if (Input::GetInstance()->TriggerKey(DIK_F1)) {
-		effectNo++;
-	}
+void BoxFilter::EffectUpdate() {
+
+#ifdef _DEBUG
+
+	ImGui::Text("BoxFilter");
+
+#endif
+
 }

@@ -36,6 +36,10 @@ void Grayscale::RootSignature() {
 	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	rootParameters[0].DescriptorTable.pDescriptorRanges = descriptorRange;
 	rootParameters[0].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);
+	
+	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	rootParameters[1].Descriptor.ShaderRegister = 0;
 
 	//2でまとめる
 	staticSamplers[0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
@@ -147,17 +151,33 @@ void Grayscale::GraphicsPipeline() {
 
 	SrvManager::GetInstance()->CreateSRVforTexture2D(srvIndex, dxCommon_->GetRenderTexture(), DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, 1);
 
+	GrayscaleResource = dxCommon_->CreateBufferResource(sizeof(GrayFunction));
+	GrayscaleResource->Map(0, nullptr, reinterpret_cast<void**>(&grayFunction));
+
+	grayFunction->isSepia = false;
 }
 
 void Grayscale::Command() {
 	dxCommon_->GetCommandList()->SetGraphicsRootSignature(rootSignature.Get());
 	dxCommon_->GetCommandList()->SetPipelineState(graphicsPipelineState.Get());
 	dxCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(0, srvHandleGPU);
+	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(1, GrayscaleResource->GetGPUVirtualAddress());
 	dxCommon_->GetCommandList()->DrawInstanced(3, 1, 0, 0);
 }
 
-void Grayscale::EffectChange() {
-	if (Input::GetInstance()->TriggerKey(DIK_F1)) {
-		effectNo++;
+void Grayscale::EffectUpdate() {
+
+#ifdef _DEBUG
+	ImGui::Text("Grayscale");
+	ImGui::Checkbox("Change_Sepia", &Imgui);
+
+	if (Imgui) {
+		grayFunction->isSepia = true;
 	}
+	else {
+		grayFunction->isSepia = false;
+	}
+
+#endif
+
 }

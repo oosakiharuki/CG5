@@ -22,7 +22,7 @@ private:
 	void RootSignature() override;
 	void GraphicsPipeline() override;
 
-	void EffectChange() override;
+	void EffectUpdate() override;
 
 	DirectXCommon* dxCommon_;
 

@@ -156,8 +156,10 @@ void Vignette::Command() {
 	dxCommon_->GetCommandList()->DrawInstanced(3, 1, 0, 0);
 }
 
-void Vignette::EffectChange() {
-	if (Input::GetInstance()->TriggerKey(DIK_F1)) {
-		effectNo = 0;
-	}
+void Vignette::EffectUpdate() {
+
+#ifdef _DEBUG
+	ImGui::Text("Vignette");
+#endif
+
 }

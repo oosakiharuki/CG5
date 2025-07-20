@@ -87,8 +87,17 @@ void PostEffectManager::Update() {
 		Change(prevNo_, currentNo_);
 		effectArr_[currentNo_]->Initialize(dxCommon_);
 	}
+#ifdef _DEBUG
+	ImGui::Begin("PostEffect");
+	ImGui::Text("F1キーでポストエフェクトを変更できます");
+#endif
 	
-	effectArr_[currentNo_]->EffectChange();
+	effectArr_[currentNo_]->EffectUpdate();//更新処理
+	effectArr_[currentNo_]->ChangeNumber();//ポストエフェクト変更処理
+
+#ifdef _DEBUG
+	ImGui::End();
+#endif	
 
 }
 

@@ -156,8 +156,10 @@ void LuminanceBasedOutline::Command() {
 	dxCommon_->GetCommandList()->DrawInstanced(3, 1, 0, 0);
 }
 
-void LuminanceBasedOutline::EffectChange() {
-	if (Input::GetInstance()->TriggerKey(DIK_F1)) {
-		effectNo++;
-	}
+void LuminanceBasedOutline::EffectUpdate() {
+
+#ifdef _DEBUG
+	ImGui::Text("LuminanceBasedOutline");
+#endif
+
 }

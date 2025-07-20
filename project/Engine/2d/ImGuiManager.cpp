@@ -32,6 +32,11 @@ void ImGuiManager::Initialize([[maybe_unused]]WinApp* winApp, DirectXCommon* dxC
 		srvManager->GetCPUDescriptorHandle(srvIndex),
 		srvManager->GetGPUDescriptorHandle(srvIndex));
 
+	///日本語作成用
+	ImGuiIO& io = ImGui::GetIO();
+	static ImWchar const glyph_ranges[] = { 0x0020, 0xfffd,0, };
+	ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\meiryo.ttc", 18.0f, NULL, glyph_ranges);
+
 
 #endif //  USE_IMGUI
 }
