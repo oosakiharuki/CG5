@@ -171,6 +171,9 @@
     <ClCompile Include="Engine\PostEffect\Dissolve.cpp">
       <Filter>ソース ファイル\Engine\PostEffect</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\PostEffect\Random.cpp">
+      <Filter>ソース ファイル\Engine\PostEffect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\2d\Sprite.h">
@@ -314,6 +317,9 @@
     <ClInclude Include="Engine\PostEffect\Dissolve.h">
       <Filter>ソース ファイル\Engine\PostEffect</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\PostEffect\Random.h">
+      <Filter>ソース ファイル\Engine\PostEffect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="resource\shaders\Particle.hlsli">
@@ -376,6 +382,9 @@
       <Filter>リソース ファイル</Filter>
     </FxCompile>
     <FxCompile Include="resource\shaders\Dissolve.PS.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="resource\shaders\Random.PS.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
   </ItemGroup>

@@ -12,6 +12,7 @@ enum EFFECT {
 	Mode_Grayscale,
 	Mode_LuminanceBacedOutline,
 	Mode_RadialBlur,
+	Mode_Random,
 	Mode_Vignette,
 };
 

@@ -1,5 +1,5 @@
 #include "IPostEffects.h"
 
-int IPostEffects::effectNo = Mode_Dissolve;
+int IPostEffects::effectNo = Mode_Random;
 
 IPostEffects::~IPostEffects() {}

@@ -9,6 +9,8 @@
 #include "Normal_Image.h"
 #include "DepthBasedOutline.h"
 #include "Dissolve.h"
+#include "Random.h"
+#include "random"
 
 class PostEffectManager {
 public:
@@ -24,7 +26,7 @@ private:
 	void Change(int prev, int current);//シーン入れ替え
 
 	//最大数
-	static const uint32_t effectNum = 9;
+	static const uint32_t effectNum = Mode_Vignette + 1;
 
 	IPostEffects* effectArr_[effectNum];
 

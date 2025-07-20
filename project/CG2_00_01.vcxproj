@@ -119,6 +119,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\PostEffect\Normal_Image.cpp" />
     <ClCompile Include="Engine\PostEffect\PostEffectManager.cpp" />
     <ClCompile Include="Engine\PostEffect\RadialBlur.cpp" />
+    <ClCompile Include="Engine\PostEffect\Random.cpp" />
     <ClCompile Include="Engine\PostEffect\Vignette.cpp" />
     <ClCompile Include="Engine\scene\GameManager.cpp" />
     <ClCompile Include="Engine\scene\GameScene.cpp" />
@@ -171,6 +172,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\PostEffect\Normal_Image.h" />
     <ClInclude Include="Engine\PostEffect\PostEffectManager.h" />
     <ClInclude Include="Engine\PostEffect\RadialBlur.h" />
+    <ClInclude Include="Engine\PostEffect\Random.h" />
     <ClInclude Include="Engine\PostEffect\Vignette.h" />
     <ClInclude Include="Engine\scene\GameManager.h" />
     <ClInclude Include="Engine\scene\GameScene.h" />
@@ -226,6 +228,12 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </None>
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="resource\shaders\Random.PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
     <FxCompile Include="resource\shaders\Dissolve.PS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>

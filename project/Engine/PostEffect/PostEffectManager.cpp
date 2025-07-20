@@ -54,13 +54,16 @@ void PostEffectManager::Change(int prev, int current) {
 	case Mode_RadialBlur:
 		effectArr_[current] = new RadialBlur();
 		break;
+	case Mode_Random:
+		effectArr_[current] = new Random();
+		break;
 	case Mode_Vignette:
 		effectArr_[current] = new Vignette();
 		break;
 	default:
 		break;
 	}
-
+	
 }
 void PostEffectManager::Initialize(DirectXCommon* dxCommon) {
 	
