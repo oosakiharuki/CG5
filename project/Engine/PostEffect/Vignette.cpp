@@ -36,6 +36,10 @@ void Vignette::RootSignature() {
 	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	rootParameters[0].DescriptorTable.pDescriptorRanges = descriptorRange;
 	rootParameters[0].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);
+	
+	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	rootParameters[1].Descriptor.ShaderRegister = 0;
 
 	//2でまとめる
 	staticSamplers[0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
@@ -96,7 +100,7 @@ void Vignette::GraphicsPipeline() {
 	//RasterizerState
 	D3D12_RASTERIZER_DESC rasterizerDesc{};
 
-	rasterizerDesc.CullMode = D3D12_CULL_MODE_NONE;//表裏表示
+	rasterizerDesc.CullMode = D3D12_CULL_MODE_BACK;//表裏表示
 	rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
 
 	//shaderのコンパイラ
@@ -147,12 +151,19 @@ void Vignette::GraphicsPipeline() {
 
 	SrvManager::GetInstance()->CreateSRVforTexture2D(srvIndex, dxCommon_->GetRenderTexture(), DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, 1);
 
+
+	vignetteResource = dxCommon_->CreateBufferResource(sizeof(VignetteFunction));
+	vignetteResource->Map(0, nullptr, reinterpret_cast<void**>(&vignetteFunction));
+
+	vignetteFunction->luminance = 16;
+	vignetteFunction->darkness = 0.8f;
 }
 
 void Vignette::Command() {
 	dxCommon_->GetCommandList()->SetGraphicsRootSignature(rootSignature.Get());
 	dxCommon_->GetCommandList()->SetPipelineState(graphicsPipelineState.Get());
 	dxCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(0, srvHandleGPU);
+	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(1, vignetteResource->GetGPUVirtualAddress());
 	dxCommon_->GetCommandList()->DrawInstanced(3, 1, 0, 0);
 }
 
@@ -160,6 +171,8 @@ void Vignette::EffectUpdate() {
 
 #ifdef _DEBUG
 	ImGui::Text("Vignette");
+	ImGui::SliderFloat("明るさ", &vignetteFunction->luminance, 0.0f, 100.0f);
+	ImGui::SliderFloat("暗さ", &vignetteFunction->darkness, 0.0f, 2.0f);
 #endif
 
 }

@@ -8,6 +8,14 @@ struct PixelShaderOutput
     float32_t4 color : SV_TARGET0;
 };
 
+struct Material
+{
+    float luminance;
+    float darkness;
+};
+
+ConstantBuffer<Material> gMaterial : register(b0);
+
 PixelShaderOutput main(VartexShaderOutput input)
 {
     PixelShaderOutput output;
@@ -17,10 +25,10 @@ PixelShaderOutput main(VartexShaderOutput input)
     float32_t2 correct = input.texcoord * (1.0f - input.texcoord.yx);
     
     //correctの値が小さすぎなので大きくする
-    float vignette = correct.x * correct.y * 16.0f;
+    float vignette = correct.x * correct.y * gMaterial.luminance;
     
     //pow = vignetteの○乗
-    vignette = saturate(pow(vignette, 0.8f));
+    vignette = saturate(pow(vignette, gMaterial.darkness));
     
     output.color.rgb *= vignette;
     

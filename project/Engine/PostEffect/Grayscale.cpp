@@ -169,7 +169,7 @@ void Grayscale::EffectUpdate() {
 
 #ifdef _DEBUG
 	ImGui::Text("Grayscale");
-	ImGui::Checkbox("Change_Sepia", &Imgui);
+	ImGui::Checkbox("セピア調", &Imgui);
 
 	if (Imgui) {
 		grayFunction->isSepia = true;

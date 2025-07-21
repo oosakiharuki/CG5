@@ -20,7 +20,7 @@ float gauss(float x, float y, float sigma)
 
 PixelShaderOutput main(VartexShaderOutput input)
 {
-    static const int32_t box = 13;
+    static const int32_t box = 9;
     float32_t2 kIndex3x3[box][box];
     
     float k = (box - 1) / 2;
