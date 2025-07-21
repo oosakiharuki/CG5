@@ -26,7 +26,7 @@ private:
 	void Change(int prev, int current);//シーン入れ替え
 
 	//最大数
-	static const uint32_t effectNum = Mode_Vignette + 1;
+	static const uint32_t effectNum = Max;
 
 	IPostEffects* effectArr_[effectNum];
 

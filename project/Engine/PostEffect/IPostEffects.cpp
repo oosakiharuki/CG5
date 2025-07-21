@@ -1,6 +1,6 @@
 #include "IPostEffects.h"
 
-int IPostEffects::effectNo = Mode_Random;
+int IPostEffects::effectNo = Mode_Normal_Image;
 
 IPostEffects::~IPostEffects() {}
 
@@ -9,7 +9,8 @@ void IPostEffects::ChangeNumber() {
 	if (Input::GetInstance()->TriggerKey(DIK_F1)) {
 		effectNo++;
 	}
-	if (effectNo == Mode_Vignette + 1) {
+	//最大→0に
+	if (effectNo == Max) {
 		effectNo = 0;
 	}
 }

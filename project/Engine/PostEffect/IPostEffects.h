@@ -5,16 +5,17 @@
 #include "ImGuiManager.h"
 
 enum EFFECT {
-	Mode_Normal_Image,//None
-	Mode_BoxFillter,
-	Mode_DepthBasedOutline,
-	Mode_Dissolve,
-	Mode_GaussianFillter,
+	Mode_Normal_Image,//None 何もなし
 	Mode_Grayscale,
-	Mode_LuminanceBacedOutline,
-	Mode_RadialBlur,
-	Mode_Random,
 	Mode_Vignette,
+	Mode_BoxFillter,
+	Mode_GaussianFillter,
+	Mode_LuminanceBacedOutline,
+	Mode_DepthBasedOutline,
+	Mode_RadialBlur,
+	Mode_Dissolve,
+	Mode_Random,
+	Max,//最大
 };
 
 class IPostEffects {
