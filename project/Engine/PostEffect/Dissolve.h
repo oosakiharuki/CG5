@@ -46,4 +46,5 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> dissolveResource;
 	
 	Threshold* threshold;
+	bool isChangeMask = false;
 };

@@ -190,9 +190,27 @@ void Dissolve::EffectUpdate() {
 #ifdef _DEBUG
 
 	ImGui::Text("Dissolve");
-	ImGui::SliderFloat("degress", &threshold->degress, 0.0f, 1.0f);
-	ImGui::SliderFloat("egdeSize", &threshold->egdeSize, 0.0f, 0.1f);
+	ImGui::SliderFloat("溶かし度合", &threshold->degress, 0.0f, 1.0f);
+	ImGui::SliderFloat("egdeのサイズ", &threshold->egdeSize, 0.0f, 0.1f);
 	//ImGui::SliderFloat3("egdeColor", &threshold->egdeColor.x, 0.0f, 1.0f);
+
+	
+	ImGui::Checkbox("マスク画像変更",&isChangeMask);
+
+	ImGui::Text("現在のマスク画像");
+	if (isChangeMask) {
+		textureFileName = "resource/Sprite/noise1.png";
+		TextureManager::GetInstance()->LoadTexture(textureFileName);
+
+		ImGui::Text("noise1");
+	}
+	else {
+		textureFileName = "resource/Sprite/noise0.png";
+		TextureManager::GetInstance()->LoadTexture(textureFileName);
+
+		ImGui::Text("noise0");
+	}
+
 
 #endif
 }
