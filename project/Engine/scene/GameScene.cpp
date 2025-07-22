@@ -2,19 +2,6 @@
 
 void GameScene::Initialize() {
 	
-
-
-  	//ModelManager::GetInstance()->LoadModel("plane.obj");
-	ModelManager::GetInstance()->LoadModel("axis");
-	ModelManager::GetInstance()->LoadModel("cannon");
-	ModelManager::GetInstance()->LoadModel("stage");
-	ModelManager::GetInstance()->LoadModel("Spring");
-	ModelManager::GetInstance()->LoadModel("multiMaterial");
-	//ModelManager::GetInstance()->CreateOBJ("cannon");
-  
-	ModelManager::GetInstance()->LoadModel("plane");
-	//ModelManager::GetInstance()->LoadModel("maru.obj");
-	//ModelManager::GetInstance()->LoadModel("teapot.obj");
 	ModelManager::GetInstance()->LoadModel("grass01");
 	ModelManager::GetInstance()->LoadModel("sphere");
 
