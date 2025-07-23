@@ -2,10 +2,6 @@
 
 struct Material
 {
-    float32_t4 color;
-    int32_t enableLighting;
-    float32_t4x4 uvTransform;
-    float32_t shininess;
     float32_t projectionInverse;
 };
 
@@ -76,7 +72,8 @@ PixelShaderOutput main(VartexShaderOutput input)
             float32_t ndcDepth = gDepthTexture.Sample(gSamplerPoint, texcoord);
             
             float32_t4 viewSpace = mul(float32_t4(0.0f, 0.0f, ndcDepth, 1.0f),gMaterial.projectionInverse);
-            float32_t viewZ = viewSpace.z * rcp(viewSpace.w);
+            ///viewSpace.x = 0 * proI + 0 * proI + ndcDepth * proI + 1.0f * proI ...
+            float32_t viewZ = viewSpace.z * viewSpace.w; //viewSpaceの-1乗
             
             difference.x += viewZ * kPrewittHorisontalKernel[x][y];
             difference.y += viewZ * kPrewittVerticalKernel[x][y];
@@ -84,8 +81,7 @@ PixelShaderOutput main(VartexShaderOutput input)
     }
     float32_t weight = length(difference);
     
-    ///線を出す深さだと思う
-    weight = saturate(weight * 5000); //0 ～ 1
+    weight = saturate(weight); //0 ～ 1
     
     
     PixelShaderOutput output;

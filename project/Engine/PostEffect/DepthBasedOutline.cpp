@@ -190,15 +190,11 @@ void DepthBasedOutline::GraphicsPipeline() {
 
 	//Model用マテリアル
 	//マテリアル用のリソース
-	materialResource = dxCommon_->CreateBufferResource(sizeof(Material));
+	materialResource = dxCommon_->CreateBufferResource(sizeof(DepthOutlineFunction));
 	//書き込むためのアドレス
-	materialResource->Map(0, nullptr, reinterpret_cast<void**>(&materialData));
+	materialResource->Map(0, nullptr, reinterpret_cast<void**>(&depthOutlineFunction));
 	//色の設定
-	materialData->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-	materialData->enableLighting = false;
-	materialData->uvTransform = MakeIdentity4x4();
-	materialData->shininess = 0;
-	materialData->projectionInverse = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+	depthOutlineFunction->projectionInverse = 100.0f;
 
 }
 
@@ -217,6 +213,7 @@ void DepthBasedOutline::EffectUpdate() {
 
 #ifdef _DEBUG
 	ImGui::Text("DepthBasedOutline");
+	ImGui::SliderFloat("線", &depthOutlineFunction->projectionInverse, 0.0f, 100.0f);
 #endif
 
 }

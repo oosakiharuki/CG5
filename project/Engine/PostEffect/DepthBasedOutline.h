@@ -38,6 +38,11 @@ private:
 	D3D12_GPU_DESCRIPTOR_HANDLE srvHandleGPU2;
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> materialResource;
-	Material* materialData = nullptr;
+
+	struct DepthOutlineFunction {
+		float projectionInverse;
+	};
+	
+	DepthOutlineFunction* depthOutlineFunction = nullptr;
 
 };
