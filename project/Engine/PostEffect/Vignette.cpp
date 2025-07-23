@@ -1,5 +1,6 @@
 #include "Vignette.h"
 #include <SrvManager.h>
+#include <algorithm>
 
 using namespace Logger;
 
@@ -174,5 +175,23 @@ void Vignette::EffectUpdate() {
 	ImGui::SliderFloat("明るさ", &vignetteFunction->luminance, 0.0f, 100.0f);
 	ImGui::SliderFloat("暗さ", &vignetteFunction->darkness, 0.0f, 2.0f);
 #endif
+
+	//明るさの調節
+	if (Input::GetInstance()->PushKey(DIK_D)) {
+		vignetteFunction->luminance += 1.0f;
+	}
+	else if (Input::GetInstance()->PushKey(DIK_A)) {
+		vignetteFunction->luminance -= 1.0f;
+	}
+	vignetteFunction->luminance = std::clamp(vignetteFunction->luminance, 0.0f, 100.0f);
+
+	//明るさの調節
+	if (Input::GetInstance()->PushKey(DIK_RIGHT) && vignetteFunction->darkness < 2.0f) {
+		vignetteFunction->darkness += 0.01f;
+	}
+	else if (Input::GetInstance()->PushKey(DIK_LEFT) && vignetteFunction->darkness > 0.0f) {
+		vignetteFunction->darkness -= 0.01f;
+	}
+	vignetteFunction->darkness = std::clamp(vignetteFunction->darkness, 0.0f, 2.0f);
 
 }

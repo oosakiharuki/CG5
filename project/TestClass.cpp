@@ -18,7 +18,7 @@ void TestClass::Init() {
 
 	object_ = new Object3d();
 	object_->Initialize();
-	object_->SetModelFile("grass01");
+	object_->SetModelFile("terrain");
 	worldTransform_.scale_ = { 0.5f,0.5f,0.5f };
 
 	object2_ = new Object3d();
@@ -62,6 +62,8 @@ void TestClass::Update() {
 
 	object_->LightSwitch(onLight);
 	object2_->LightSwitch(onLight);
+
+	worldTransform_.rotation_.y += 0.005f;
 
 	worldTransform_.UpdateMatrix();
 	worldTransform2_.UpdateMatrix();

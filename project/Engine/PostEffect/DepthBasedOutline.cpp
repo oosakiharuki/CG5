@@ -213,7 +213,7 @@ void DepthBasedOutline::EffectUpdate() {
 
 #ifdef _DEBUG
 	ImGui::Text("DepthBasedOutline");
-	ImGui::SliderFloat("線", &depthOutlineFunction->projectionInverse, 0.0f, 100.0f);
+	//ImGui::SliderFloat("線", &depthOutlineFunction->projectionInverse, 0.0f, 100.0f);
 #endif
 
 }

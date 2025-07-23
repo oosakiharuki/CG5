@@ -89,7 +89,7 @@ void PostEffectManager::Update() {
 	}
 #ifdef _DEBUG
 	ImGui::Begin("PostEffect");
-	ImGui::Text("F1キーでポストエフェクトを変更できます");
+	ImGui::Text("スペースキーでポストエフェクトを変更できます");
 #endif
 	
 	effectArr_[currentNo_]->EffectUpdate();//更新処理

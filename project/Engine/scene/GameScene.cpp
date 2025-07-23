@@ -2,7 +2,7 @@
 
 void GameScene::Initialize() {
 	
-	ModelManager::GetInstance()->LoadModel("grass01");
+	ModelManager::GetInstance()->LoadModel("terrain");
 	ModelManager::GetInstance()->LoadModel("sphere");
 
 
@@ -23,10 +23,6 @@ void GameScene::Initialize() {
 
 	spriteUI = new Sprite();
 	spriteUI->Initialize("uvChecker.png");
-
-	spriteUI2 = new Sprite();
-	spriteUI2->Initialize("uvChecker.png");
-
 }
 
 void GameScene::Update() {
@@ -39,18 +35,18 @@ void GameScene::Update() {
 		OutputDebugStringA("Hit 1\n");
 	}
 
-	if (Input::GetInstance()->TriggerKey(DIK_SPACE)) {
-		sceneNo = Title;
-	}
+	//今回はしない
+	//if (Input::GetInstance()->TriggerKey(DIK_SPACE)) {
+	//	sceneNo = Title;
+	//}
 
 	testClass->Update();
 
 	camera->Update();
-	
-	spriteUI->SetSize(Vector2(256, 256));
-	spriteUI->Update();
 
-	spriteUI2->Update();
+	spriteUI->SetPosition({ 10,10 });
+	spriteUI->SetSize(Vector2(128, 128));
+	spriteUI->Update();
 
 #ifdef  USE_IMGUI
 
@@ -88,11 +84,6 @@ void GameScene::Update() {
 
 void GameScene::Draw() {
 
-	//スプライト描画処理(背景用)
-	SpriteCommon::GetInstance()->Command();
-	//spriteUI2->Draw();
-
-
 	//モデル描画処理
 	Object3dCommon::GetInstance()->Command();
 
@@ -115,5 +106,4 @@ void GameScene::Finalize() {
 	delete testClass;
 
 	delete spriteUI;
-	delete spriteUI2;
 }

@@ -1,6 +1,7 @@
 #include "Dissolve.h"
 #include <SrvManager.h>
 #include <TextureManager.h>
+#include <algorithm>
 
 using namespace Logger;
 
@@ -194,23 +195,45 @@ void Dissolve::EffectUpdate() {
 	ImGui::SliderFloat("egdeのサイズ", &threshold->egdeSize, 0.0f, 0.1f);
 	//ImGui::SliderFloat3("egdeColor", &threshold->egdeColor.x, 0.0f, 1.0f);
 
-	
 	ImGui::Checkbox("マスク画像変更",&isChangeMask);
 
 	ImGui::Text("現在のマスク画像");
 	if (isChangeMask) {
+		ImGui::Text("noise1");
+	}
+	else {
+		ImGui::Text("noise0");
+	}
+#endif
+	//溶かし具合
+	if (Input::GetInstance()->PushKey(DIK_D)) {
+		threshold->degress += 0.01f;
+	}
+	else if (Input::GetInstance()->PushKey(DIK_A)) {
+		threshold->degress -= 0.01f;
+	}
+	threshold->degress = std::clamp(threshold->degress, 0.0f, 1.0f);
+
+	//Edge調節
+	if (Input::GetInstance()->PushKey(DIK_RIGHT)) {
+		threshold->egdeSize += 0.001f;
+	}
+	else if (Input::GetInstance()->PushKey(DIK_LEFT)) {
+		threshold->egdeSize -= 0.001f;
+	}
+	threshold->egdeSize = std::clamp(threshold->egdeSize, 0.0f, 0.1f);
+
+	//マスク変更
+	if (Input::GetInstance()->TriggerKey(DIK_RETURN)) {
+		isChangeMask = !isChangeMask;
+	}
+
+	if (isChangeMask) {
 		textureFileName = "resource/Sprite/noise1.png";
 		TextureManager::GetInstance()->LoadTexture(textureFileName);
-
-		ImGui::Text("noise1");
 	}
 	else {
 		textureFileName = "resource/Sprite/noise0.png";
 		TextureManager::GetInstance()->LoadTexture(textureFileName);
-
-		ImGui::Text("noise0");
 	}
-
-
-#endif
 }

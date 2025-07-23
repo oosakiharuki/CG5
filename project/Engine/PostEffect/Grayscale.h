@@ -1,5 +1,6 @@
 #pragma once
 #include "IPostEffects.h"
+#include <Vector3.h>
 
 class Grayscale : public IPostEffects {
 public:
@@ -36,8 +37,9 @@ private:
 	
 	struct GrayFunction {
 		int32_t isSepia;
+		Vector3 color;
 	};
 
 	GrayFunction* grayFunction;
-	bool Imgui = false;
+	bool isSepiaMode = false;
 };

@@ -100,7 +100,7 @@ void Grayscale::GraphicsPipeline() {
 	//RasterizerState
 	D3D12_RASTERIZER_DESC rasterizerDesc{};
 
-	rasterizerDesc.CullMode = D3D12_CULL_MODE_NONE;//表裏表示
+	rasterizerDesc.CullMode = D3D12_CULL_MODE_BACK;//表裏表示
 	rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
 
 	//shaderのコンパイラ
@@ -155,6 +155,8 @@ void Grayscale::GraphicsPipeline() {
 	GrayscaleResource->Map(0, nullptr, reinterpret_cast<void**>(&grayFunction));
 
 	grayFunction->isSepia = false;
+	grayFunction->color = Vector3(1.0f, 74.0f / 107.0f, 43.0f / 107.0f);//セピア調
+
 }
 
 void Grayscale::Command() {
@@ -169,15 +171,17 @@ void Grayscale::EffectUpdate() {
 
 #ifdef _DEBUG
 	ImGui::Text("Grayscale");
-	ImGui::Checkbox("セピア調", &Imgui);
+	ImGui::Checkbox("セピア調", &isSepiaMode);
+#endif
 
-	if (Imgui) {
+	//セピア調変更ボタン
+	if (Input::GetInstance()->TriggerKey(DIK_RETURN)) {
+		isSepiaMode = !isSepiaMode;
+	}
+	if (isSepiaMode) {
 		grayFunction->isSepia = true;
 	}
 	else {
-		grayFunction->isSepia = false;
+		grayFunction->isSepia = false;	
 	}
-
-#endif
-
 }

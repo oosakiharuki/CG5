@@ -26,7 +26,6 @@ private:
 	//std::vector<Sprite*> sprites;
 	//std::vector<Object3d*> objects;
 	Sprite* spriteUI;
-	Sprite* spriteUI2;
 	Vector2 position = { 0,0 };
 
 	//Particle* particle = nullptr;
